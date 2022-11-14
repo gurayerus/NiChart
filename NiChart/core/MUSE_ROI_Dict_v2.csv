@@ -1,0 +1,263 @@
+Var,VarName,VarDesc,VarCat1,VarCat2,VarCat3,VarCat4,VarCat5,VarCat6
+MUSE_Volume_4,3rd Ventricle,3rd Ventricle,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_11,4th Ventricle,4th Ventricle,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_23,Right Accumbens Area,Right Accumbens Area,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_30,Left Accumbens Area,Left Accumbens Area,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_31,Right Amygdala,Right Amygdala,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_32,Left Amygdala,Left Amygdala,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_35,Brain Stem,Brain Stem,MUSEROI,,Single,NonCortical,,
+MUSE_Volume_36,Right Caudate,Right Caudate,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_37,Left Caudate,Left Caudate,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_38,Right Cerebellum Exterior,Right Cerebellum Exterior,MUSEROI,,Single,NonCortical,Cerebellum,GM
+MUSE_Volume_39,Left Cerebellum Exterior,Left Cerebellum Exterior,MUSEROI,,Single,NonCortical,Cerebellum,GM
+MUSE_Volume_40,Right Cerebellum White Matter,Right Cerebellum White Matter,MUSEROI,,Single,NonCortical,Cerebellum,WM
+MUSE_Volume_41,Left Cerebellum White Matter,Left Cerebellum White Matter,MUSEROI,,Single,NonCortical,Cerebellum,WM
+MUSE_Volume_46,CSF,CSF,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_47,Right Hippocampus,Right Hippocampus,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_48,Left Hippocampus,Left Hippocampus,MUSEROI,MainROI,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_49,Right Inf Lat Vent,Right Inf Lat Vent,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_50,Left Inf Lat Vent,Left Inf Lat Vent,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_51,Right Lateral Ventricle,Right Lateral Ventricle,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_52,Left Lateral Ventricle,Left Lateral Ventricle,MUSEROI,,Single,NonCortical,,CSF
+MUSE_Volume_55,Right Pallidum,Right Pallidum,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_56,Left Pallidum,Left Pallidum,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_57,Right Putamen,Right Putamen,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_58,Left Putamen,Left Putamen,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_59,Right Thalamus Proper,Right Thalamus Proper,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_60,Left Thalamus Proper,Left Thalamus Proper,MUSEROI,MainROI,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_61,Right Ventral DC,Right Ventral DC,MUSEROI,,Single,NonCortical,,
+MUSE_Volume_62,Left Ventral DC,Left Ventral DC,MUSEROI,,Single,NonCortical,,
+MUSE_Volume_63,Right vessel,Right vessel,MUSEROI,,Single,NonCortical,,
+MUSE_Volume_64,Left vessel,Left vessel,MUSEROI,,Single,NonCortical,,
+MUSE_Volume_71,Cerebellar Vermal Lobules I-V,Cerebellar Vermal Lobules I-V,MUSEROI,,Single,NonCortical,Cerebellum,GM
+MUSE_Volume_72,Cerebellar Vermal Lobules VI-VII,Cerebellar Vermal Lobules VI-VII,MUSEROI,,Single,NonCortical,Cerebellum,GM
+MUSE_Volume_73,Cerebellar Vermal Lobules VIII-X,Cerebellar Vermal Lobules VIII-X,MUSEROI,,Single,NonCortical,Cerebellum,GM
+MUSE_Volume_75,Left Basal Forebrain,Left Basal Forebrain,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_76,Right Basal Forebrain,Right Basal Forebrain,MUSEROI,,Single,NonCortical,DeepStructures,GM
+MUSE_Volume_81,frontal lobe WM right,frontal lobe WM right,MUSEROI,,Single,NonCortical,FRONTAL,WM
+MUSE_Volume_82,frontal lobe WM left,frontal lobe WM left,MUSEROI,,Single,NonCortical,FRONTAL,WM
+MUSE_Volume_83,occipital lobe WM right,occipital lobe WM right,MUSEROI,,Single,NonCortical,OCCIPITAL,WM
+MUSE_Volume_84,occipital lobe WM left,occipital lobe WM left,MUSEROI,,Single,NonCortical,OCCIPITAL,WM
+MUSE_Volume_85,parietal lobe WM right,parietal lobe WM right,MUSEROI,,Single,NonCortical,PARIETAL,WM
+MUSE_Volume_86,parietal lobe WM left,parietal lobe WM left,MUSEROI,,Single,NonCortical,PARIETAL,WM
+MUSE_Volume_87,temporal lobe WM right,temporal lobe WM right,MUSEROI,,Single,NonCortical,TEMPORAL,WM
+MUSE_Volume_88,temporal lobe WM left,temporal lobe WM left,MUSEROI,,Single,NonCortical,TEMPORAL,WM
+MUSE_Volume_89,fornix right,fornix right,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_90,fornix left,fornix left,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_91,anterior limb of internal capsule right,anterior limb of internal capsule right,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_92,anterior limb of internal capsule left,anterior limb of internal capsule left,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_93,posterior limb of internal capsule inc. cerebral peduncle right,posterior limb of internal capsule inc. cerebral peduncle right,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_94,posterior limb of internal capsule inc. cerebral peduncle left,posterior limb of internal capsule inc. cerebral peduncle left,MUSEROI,,Single,NonCortical,DeepStructures,WM
+MUSE_Volume_95,corpus callosum,corpus callosum,MUSEROI,,Single,Cortical,,WM
+MUSE_Volume_100,Right ACgG  anterior cingulate gyrus,Right ACgG  anterior cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_101,Left ACgG  anterior cingulate gyrus,Left ACgG  anterior cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_102,Right AIns  anterior insula,Right AIns  anterior insula,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_103,Left AIns  anterior insula,Left AIns  anterior insula,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_104,Right AOrG  anterior orbital gyrus,Right AOrG  anterior orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_105,Left AOrG  anterior orbital gyrus,Left AOrG  anterior orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_106,Right AnG   angular gyrus,Right AnG   angular gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_107,Left AnG   angular gyrus,Left AnG   angular gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_108,Right Calc  calcarine cortex,Right Calc  calcarine cortex,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_109,Left Calc  calcarine cortex,Left Calc  calcarine cortex,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_112,Right CO    central operculum,Right CO    central operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_113,Left CO    central operculum,Left CO    central operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_114,Right Cun   cuneus,Right Cun   cuneus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_115,Left Cun   cuneus,Left Cun   cuneus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_116,Right Ent   entorhinal area,Right Ent   entorhinal area,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_117,Left Ent   entorhinal area,Left Ent   entorhinal area,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_118,Right FO    frontal operculum,Right FO    frontal operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_119,Left FO    frontal operculum,Left FO    frontal operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_120,Right FRP   frontal pole,Right FRP   frontal pole,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_121,Left FRP   frontal pole,Left FRP   frontal pole,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_122,Right FuG   fusiform gyrus,Right FuG   fusiform gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_123,Left FuG   fusiform gyrus,Left FuG   fusiform gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_124,Right GRe   gyrus rectus,Right GRe   gyrus rectus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_125,Left GRe   gyrus rectus,Left GRe   gyrus rectus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_128,Right IOG   inferior occipital gyrus,Right IOG   inferior occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_129,Left IOG   inferior occipital gyrus,Left IOG   inferior occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_132,Right ITG   inferior temporal gyrus,Right ITG   inferior temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_133,Left ITG   inferior temporal gyrus,Left ITG   inferior temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_134,Right LiG   lingual gyrus,Right LiG   lingual gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_135,Left LiG   lingual gyrus,Left LiG   lingual gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_136,Right LOrG  lateral orbital gyrus,Right LOrG  lateral orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_137,Left LOrG  lateral orbital gyrus,Left LOrG  lateral orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_138,Right MCgG  middle cingulate gyrus,Right MCgG  middle cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_139,Left MCgG  middle cingulate gyrus,Left MCgG  middle cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_140,Right MFC   medial frontal cortex,Right MFC   medial frontal cortex,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_141,Left MFC   medial frontal cortex,Left MFC   medial frontal cortex,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_142,Right MFG   middle frontal gyrus,Right MFG   middle frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_143,Left MFG   middle frontal gyrus,Left MFG   middle frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_144,Right MOG   middle occipital gyrus,Right MOG   middle occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_145,Left MOG   middle occipital gyrus,Left MOG   middle occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_146,Right MOrG  medial orbital gyrus,Right MOrG  medial orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_147,Left MOrG  medial orbital gyrus,Left MOrG  medial orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_148,Right MPoG  postcentral gyrus medial segment,Right MPoG  postcentral gyrus medial segment,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_149,Left MPoG  postcentral gyrus medial segment,Left MPoG  postcentral gyrus medial segment,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_150,Right MPrG  precentral gyrus medial segment,Right MPrG  precentral gyrus medial segment,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_151,Left MPrG  precentral gyrus medial segment,Left MPrG  precentral gyrus medial segment,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_152,Right MSFG  superior frontal gyrus medial segment,Right MSFG  superior frontal gyrus medial segment,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_153,Left MSFG  superior frontal gyrus medial segment,Left MSFG  superior frontal gyrus medial segment,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_154,Right MTG   middle temporal gyrus,Right MTG   middle temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_155,Left MTG   middle temporal gyrus,Left MTG   middle temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_156,Right OCP   occipital pole,Right OCP   occipital pole,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_157,Left OCP   occipital pole,Left OCP   occipital pole,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_160,Right OFuG  occipital fusiform gyrus,Right OFuG  occipital fusiform gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_161,Left OFuG  occipital fusiform gyrus,Left OFuG  occipital fusiform gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_162,Right OpIFG opercular part of the inferior frontal gyrus,Right OpIFG opercular part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_163,Left OpIFG opercular part of the inferior frontal gyrus,Left OpIFG opercular part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_164,Right OrIFG orbital part of the inferior frontal gyrus,Right OrIFG orbital part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_165,Left OrIFG orbital part of the inferior frontal gyrus,Left OrIFG orbital part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_166,Right PCgG  posterior cingulate gyrus,Right PCgG  posterior cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_167,Left PCgG  posterior cingulate gyrus,Left PCgG  posterior cingulate gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_168,Right PCu   precuneus,Right PCu   precuneus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_169,Left PCu   precuneus,Left PCu   precuneus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_170,Right PHG   parahippocampal gyrus,Right PHG   parahippocampal gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_171,Left PHG   parahippocampal gyrus,Left PHG   parahippocampal gyrus,MUSEROI,,Single,Cortical,LIMBIC,GM
+MUSE_Volume_172,Right PIns  posterior insula,Right PIns  posterior insula,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_173,Left PIns  posterior insula,Left PIns  posterior insula,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_174,Right PO    parietal operculum,Right PO    parietal operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_175,Left PO    parietal operculum,Left PO    parietal operculum,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_176,Right PoG   postcentral gyrus,Right PoG   postcentral gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_177,Left PoG   postcentral gyrus,Left PoG   postcentral gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_178,Right POrG  posterior orbital gyrus,Right POrG  posterior orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_179,Left POrG  posterior orbital gyrus,Left POrG  posterior orbital gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_180,Right PP    planum polare,Right PP    planum polare,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_181,Left PP    planum polare,Left PP    planum polare,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_182,Right PrG   precentral gyrus,Right PrG   precentral gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_183,Left PrG   precentral gyrus,Left PrG   precentral gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_184,Right PT    planum temporale,Right PT    planum temporale,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_185,Left PT    planum temporale,Left PT    planum temporale,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_186,Right SCA   subcallosal area,Right SCA   subcallosal area,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_187,Left SCA   subcallosal area,Left SCA   subcallosal area,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_190,Right SFG   superior frontal gyrus,Right SFG   superior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_191,Left SFG   superior frontal gyrus,Left SFG   superior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_192,Right SMC   supplementary motor cortex,Right SMC   supplementary motor cortex,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_193,Left SMC   supplementary motor cortex,Left SMC   supplementary motor cortex,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_194,Right SMG   supramarginal gyrus,Right SMG   supramarginal gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_195,Left SMG   supramarginal gyrus,Left SMG   supramarginal gyrus,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_196,Right SOG   superior occipital gyrus,Right SOG   superior occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_197,Left SOG   superior occipital gyrus,Left SOG   superior occipital gyrus,MUSEROI,,Single,Cortical,OCCIPITAL,GM
+MUSE_Volume_198,Right SPL   superior parietal lobule,Right SPL   superior parietal lobule,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_199,Left SPL   superior parietal lobule,Left SPL   superior parietal lobule,MUSEROI,,Single,Cortical,PARIETAL,GM
+MUSE_Volume_200,Right STG   superior temporal gyrus,Right STG   superior temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_201,Left STG   superior temporal gyrus,Left STG   superior temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_202,Right TMP   temporal pole,Right TMP   temporal pole,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_203,Left TMP   temporal pole,Left TMP   temporal pole,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_204,Right TrIFG triangular part of the inferior frontal gyrus,Right TrIFG triangular part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_205,Left TrIFG triangular part of the inferior frontal gyrus,Left TrIFG triangular part of the inferior frontal gyrus,MUSEROI,,Single,Cortical,FRONTAL,GM
+MUSE_Volume_206,Right TTG   transverse temporal gyrus,Right TTG   transverse temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_207,Left TTG   transverse temporal gyrus,Left TTG   transverse temporal gyrus,MUSEROI,,Single,Cortical,TEMPORAL,GM
+MUSE_Volume_301,FRONTAL_INFERIOR_GM,FRONTAL_INFERIOR_GM,MUSEROI,,Derived,,,
+MUSE_Volume_302,FRONTAL_INSULAR_GM,FRONTAL_INSULAR_GM,MUSEROI,,Derived,,,
+MUSE_Volume_303,FRONTAL_LATERAL_GM,FRONTAL_LATERAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_304,FRONTAL_MEDIAL_GM,FRONTAL_MEDIAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_305,FRONTAL_OPERCULAR_GM,FRONTAL_OPERCULAR_GM,MUSEROI,,Derived,,,
+MUSE_Volume_306,LIMBIC_CINGULATE_GM,LIMBIC_CINGULATE_GM,MUSEROI,,Derived,,,
+MUSE_Volume_307,LIMBIC_MEDIALTEMPORAL_GM,LIMBIC_MEDIALTEMPORAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_308,OCCIPITAL_INFERIOR_GM,OCCIPITAL_INFERIOR_GM,MUSEROI,,Derived,,,
+MUSE_Volume_309,OCCIPITAL_LATERAL_GM,OCCIPITAL_LATERAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_310,OCCIPITAL_MEDIAL_GM,OCCIPITAL_MEDIAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_311,PARIETAL_LATERAL_GM,PARIETAL_LATERAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_312,PARIETAL_MEDIAL_GM,PARIETAL_MEDIAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_313,TEMPORAL_INFERIOR_GM,TEMPORAL_INFERIOR_GM,MUSEROI,,Derived,,,
+MUSE_Volume_314,TEMPORAL_LATERAL_GM,TEMPORAL_LATERAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_315,TEMPORAL_SUPRATEMPORAL_GM,TEMPORAL_SUPRATEMPORAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_316,FRONTAL_INFERIOR_GM_L,FRONTAL_INFERIOR_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_317,FRONTAL_INSULAR_GM_L,FRONTAL_INSULAR_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_318,FRONTAL_LATERAL_GM_L,FRONTAL_LATERAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_319,FRONTAL_MEDIAL_GM_L,FRONTAL_MEDIAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_320,FRONTAL_OPERCULAR_GM_L,FRONTAL_OPERCULAR_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_321,LIMBIC_CINGULATE_GM_L,LIMBIC_CINGULATE_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_322,LIMBIC_MEDIALTEMPORAL_GM_L,LIMBIC_MEDIALTEMPORAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_323,OCCIPITAL_INFERIOR_GM_L,OCCIPITAL_INFERIOR_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_324,OCCIPITAL_LATERAL_GM_L,OCCIPITAL_LATERAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_325,OCCIPITAL_MEDIAL_GM_L,OCCIPITAL_MEDIAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_326,PARIETAL_LATERAL_GM_L,PARIETAL_LATERAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_327,PARIETAL_MEDIAL_GM_L,PARIETAL_MEDIAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_328,TEMPORAL_INFERIOR_GM_L,TEMPORAL_INFERIOR_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_329,TEMPORAL_LATERAL_GM_L,TEMPORAL_LATERAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_330,TEMPORAL_SUPRATEMPORAL_GM_L,TEMPORAL_SUPRATEMPORAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_331,FRONTAL_INFERIOR_GM_R,FRONTAL_INFERIOR_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_332,FRONTAL_INSULAR_GM_R,FRONTAL_INSULAR_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_333,FRONTAL_LATERAL_GM_R,FRONTAL_LATERAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_334,FRONTAL_MEDIAL_GM_R,FRONTAL_MEDIAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_335,FRONTAL_OPERCULAR_GM_R,FRONTAL_OPERCULAR_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_336,LIMBIC_CINGULATE_GM_R,LIMBIC_CINGULATE_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_337,LIMBIC_MEDIALTEMPORAL_GM_R,LIMBIC_MEDIALTEMPORAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_338,OCCIPITAL_INFERIOR_GM_R,OCCIPITAL_INFERIOR_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_339,OCCIPITAL_LATERAL_GM_R,OCCIPITAL_LATERAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_340,OCCIPITAL_MEDIAL_GM_R,OCCIPITAL_MEDIAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_341,PARIETAL_LATERAL_GM_R,PARIETAL_LATERAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_342,PARIETAL_MEDIAL_GM_R,PARIETAL_MEDIAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_343,TEMPORAL_INFERIOR_GM_R,TEMPORAL_INFERIOR_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_344,TEMPORAL_LATERAL_GM_R,TEMPORAL_LATERAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_345,TEMPORAL_SUPRATEMPORAL_GM_R,TEMPORAL_SUPRATEMPORAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_401,BASAL_GANGLIA,BASAL_GANGLIA,MUSEROI,,Derived,,,
+MUSE_Volume_402,DEEP_GM,DEEP_GM,MUSEROI,,Derived,,,
+MUSE_Volume_403,DEEP_WM,DEEP_WM,MUSEROI,,Derived,,,
+MUSE_Volume_404,FRONTAL_GM,FRONTAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_405,FRONTAL_WM,FRONTAL_WM,MUSEROI,,Derived,,,
+MUSE_Volume_406,LIMBIC_GM,LIMBIC_GM,MUSEROI,,Derived,,,
+MUSE_Volume_407,OCCIPITAL_GM,OCCIPITAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_408,OCCIPITAL_WM,OCCIPITAL_WM,MUSEROI,,Derived,,,
+MUSE_Volume_409,PARIETAL_GM,PARIETAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_410,PARIETAL_WM,PARIETAL_WM,MUSEROI,,Derived,,,
+MUSE_Volume_411,TEMPORAL_GM,TEMPORAL_GM,MUSEROI,,Derived,,,
+MUSE_Volume_412,TEMPORAL_WM,TEMPORAL_WM,MUSEROI,,Derived,,,
+MUSE_Volume_413,BASAL_GANGLIA_L,BASAL_GANGLIA_L,MUSEROI,,Derived,,,
+MUSE_Volume_414,DEEP_GM_L,DEEP_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_415,DEEP_WM_L,DEEP_WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_416,FRONTAL_GM_L,FRONTAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_417,FRONTAL_WM_L,FRONTAL_WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_418,LIMBIC_GM_L,LIMBIC_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_419,OCCIPITAL_GM_L,OCCIPITAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_420,OCCIPITAL_WM_L,OCCIPITAL_WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_421,PARIETAL_GM_L,PARIETAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_422,PARIETAL_WM_L,PARIETAL_WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_423,TEMPORAL_GM_L,TEMPORAL_GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_424,TEMPORAL_WM_L,TEMPORAL_WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_425,BASAL_GANGLIA_R,BASAL_GANGLIA_R,MUSEROI,,Derived,,,
+MUSE_Volume_426,DEEP_GM_R,DEEP_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_427,DEEP_WM_R,DEEP_WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_428,FRONTAL_GM_R,FRONTAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_429,FRONTAL_WM_R,FRONTAL_WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_430,LIMBIC_GM_R,LIMBIC_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_431,OCCIPITAL_GM_R,OCCIPITAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_432,OCCIPITAL_WM_R,OCCIPITAL_WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_433,PARIETAL_GM_R,PARIETAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_434,PARIETAL_WM_R,PARIETAL_WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_435,TEMPORAL_GM_R,TEMPORAL_GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_436,TEMPORAL_WM_R,TEMPORAL_WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_501,CORPUS_CALLOSUM,CORPUS_CALLOSUM,MUSEROI,,Derived,,,
+MUSE_Volume_502,Cerebellum,Cerebellum,MUSEROI,,Derived,,,
+MUSE_Volume_503,DeepStructures,DeepStructures,MUSEROI,,Derived,,,
+MUSE_Volume_504,FRONTAL,FRONTAL,MUSEROI,,Derived,,,
+MUSE_Volume_505,LIMBIC,LIMBIC,MUSEROI,,Derived,,,
+MUSE_Volume_506,OCCIPITAL,OCCIPITAL,MUSEROI,,Derived,,,
+MUSE_Volume_507,PARIETAL,PARIETAL,MUSEROI,,Derived,,,
+MUSE_Volume_508,TEMPORAL,TEMPORAL,MUSEROI,,Derived,,,
+MUSE_Volume_509,VENTRICLE,VENTRICLE,MUSEROI,MainROI,Derived,,,
+MUSE_Volume_510,Cerebellum_L,Cerebellum_L,MUSEROI,,Derived,,,
+MUSE_Volume_511,DeepStructures_L,DeepStructures_L,MUSEROI,,Derived,,,
+MUSE_Volume_512,FRONTAL_L,FRONTAL_L,MUSEROI,,Derived,,,
+MUSE_Volume_513,LIMBIC_L,LIMBIC_L,MUSEROI,,Derived,,,
+MUSE_Volume_514,OCCIPITAL_L,OCCIPITAL_L,MUSEROI,,Derived,,,
+MUSE_Volume_515,PARIETAL_L,PARIETAL_L,MUSEROI,,Derived,,,
+MUSE_Volume_516,TEMPORAL_L,TEMPORAL_L,MUSEROI,,Derived,,,
+MUSE_Volume_517,VENTRICLE_L,VENTRICLE_L,MUSEROI,,Derived,,,
+MUSE_Volume_518,Cerebellum_R,Cerebellum_R,MUSEROI,,Derived,,,
+MUSE_Volume_519,DeepStructures_R,DeepStructures_R,MUSEROI,,Derived,,,
+MUSE_Volume_520,FRONTAL_R,FRONTAL_R,MUSEROI,,Derived,,,
+MUSE_Volume_521,LIMBIC_R,LIMBIC_R,MUSEROI,,Derived,,,
+MUSE_Volume_522,OCCIPITAL_R,OCCIPITAL_R,MUSEROI,,Derived,,,
+MUSE_Volume_523,PARIETAL_R,PARIETAL_R,MUSEROI,,Derived,,,
+MUSE_Volume_524,TEMPORAL_R,TEMPORAL_R,MUSEROI,,Derived,,,
+MUSE_Volume_525,VENTRICLE_R,VENTRICLE_R,MUSEROI,,Derived,,,
+MUSE_Volume_601,GM,GM,MUSEROI,MainROI,Derived,,,
+MUSE_Volume_604,WM,WM,MUSEROI,MainROI,Derived,,,
+MUSE_Volume_606,GM_L,GM_L,MUSEROI,,Derived,,,
+MUSE_Volume_607,WM_L,WM_L,MUSEROI,,Derived,,,
+MUSE_Volume_613,GM_R,GM_R,MUSEROI,,Derived,,,
+MUSE_Volume_614,WM_R,WM_R,MUSEROI,,Derived,,,
+MUSE_Volume_701,TOTALBRAIN,TOTALBRAIN,MUSEROI,MainROI,Derived,,,
+MUSE_Volume_702,ICV,ICV,MUSEROI,MainROI,Derived,,,

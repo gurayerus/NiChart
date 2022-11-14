@@ -1,0 +1,17 @@
+QWidget{
+    background-color: rgba(235, 235, 245,);
+    color: rgba(0, 0, 30, 200)
+}
+
+QComboBox{
+    background-color: rgba(170, 170, 120);
+    color: rgba(30, 30, 0, 200)
+}
+SearchableQComboBox{
+    background-color: rgba(170, 170, 120);
+    color: rgba(30, 30, 0, 200)
+}
+CheckableQComboBox{
+    background-color: rgba(170, 170, 120);
+    color: rgba(30, 30, 0, 200)
+}

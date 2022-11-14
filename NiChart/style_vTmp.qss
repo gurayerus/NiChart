@@ -1,0 +1,36 @@
+MainWindow {
+    background-color: rgba(210, 210, 255, 210);
+    color: rgba(210, 210, 255, 200)
+}
+DSetView{
+    background-color: rgba(255, 205, 205, 210);
+    color: rgba(255, 255, 255, 10)
+}
+
+QWidget {
+    background-color: "#333";
+    color: "#eee";
+    padding: 0px
+}
+QTableView {
+    border: 1px solid "#222";
+    padding: 0px;
+    font-family: "Segoe UI";
+    font-size: 14px;
+    alternate-background-color: "#424242"
+}
+QTableView::item:selected {
+    background-color: "#3388ff"
+}
+QTableView QTableCornerButton::section {
+    background-color: "#292929";
+    border: 1px;
+    padding: 0px
+}
+QHeaderView, QHeaderView::section {
+    background-color: "#292929";
+    color: "#eee";
+    font-size: 15px;
+    border: 1px;
+    padding: 0px
+}

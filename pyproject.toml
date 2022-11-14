@@ -1,0 +1,133 @@
+[build-system]
+requires = ["setuptools", "wheel", "poetry-core @ git+https://github.com/python-poetry/poetry-core.git@master"]
+#build-backend = "setuptools.build_meta"
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "NiChart"
+version = "0.1"
+description = "BrainChart Utility and Analysis Package"
+authors = [
+    "Ahmed Abdulkadir <Ahmed.Abdulkadir@pennmedicine.upenn.edu>",
+    "Ashish Singh <Ashish.Singh@pennmedicine.upenn.edu>",
+    "Randa Melhem <Randa.Melhem@Pennmedicine.upenn.edu>"
+]
+keywords = ["neuro-imaging", "MRI", "big data"]
+
+readme = "README.md"
+
+include = ["NiChart/plugins/data/MUSE_ROI_Dictionary.csv",
+           "NiChart/**/*.ui",
+           "NiChart/**/*.yapsy-plugin",
+           "*.png"]
+packages = [
+    {include = "NiChart"}
+]
+
+
+[tool.briefcase]
+project_name = "NiChart"
+name = "[NiChart]"
+bundle = "com.example"
+version = "0.1"
+description = "BrainChart Utility and Analysis Package"
+authors = [
+    "Ahmed Abdulkadir <Ahmed.Abdulkadir@pennmedicine.upenn.edu>",
+    "Ashish Singh <Ashish.Singh@pennmedicine.upenn.edu>",
+    "Randa Melhem <Randa.Melhem@Pennmedicine.upenn.edu>"
+]
+keywords = ["neuro-imaging", "MRI", "big data"]
+readme = "README.md"
+icon = "NiChart/resources/icon"
+installer_icon = "NiChart/resources/icon"
+include = ["NiChart/plugins/data/MUSE_ROI_Dictionary.csv",
+           "NiChart/**/*.ui",
+           "NiChart/**/*.yapsy-plugin",
+           "*.png"]
+packages = [
+    {include = "NiChart"}
+]
+
+
+[tool.briefcase.app.NiChart.macOS]
+requires = []
+
+[tool.briefcase.app.NiChart.linux]
+requires = []
+system_requires = []
+
+[tool.briefcase.app.NiChart.windows]
+requires = []
+
+
+[tool.briefcase.app.NiChart]
+formal_name = "NiChart"
+description = "The coolest app ever"
+icon = "NiChart/resources/icon" # Briecase will choose the right extension depending the os (png,ico,...)
+sources = ['NiChart']
+requires = ['cycler==0.10.0',
+'joblib==1.0.1',
+'MarkupSafe==2.0.1',
+'matplotlib>=3.4.2',
+'nibabel==3.2.1',
+'numpy>=1.21',
+'git+https://github.com/rpomponio/neuroHarmonize@refs/pull/26/head#egg=neuroHarmonize',
+'pandas==1.3.4',
+'Pillow>=9.0.0',
+'pyparsing==2.4.7',
+'PyQt5>=5.15.4',
+'PyQt5_Qt5==5.15.2',
+'PyQt5_sip==12.9.0',
+'dill==0.3.4',
+'future==0.18.2',
+'python_dateutil==2.8.1',
+'pytz==2021.1',
+'scikit_learn>=1.0.2',
+'scipy>=1.6.3',
+'seaborn==0.11.1',
+'six==1.16.0',
+'statsmodels==0.13.0',
+'wheel>=0.37.1',
+'Yapsy==1.12.2',
+'pytest==7.0.1',
+'pytest-qt==4.0.2']
+
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+briefcase = "^0.3.5"
+cycler = "^0.10.0"
+joblib = "^1.0.1"
+MarkupSafe = "2.0.1"
+matplotlib = "^3.4.2"
+nibabel = "^3.2.1"
+numpy = "^1.21"
+neuroHarmonize = { git = "https://github.com/rpomponio/neuroHarmonize.git", branch = "refs/pull/26/head" }
+pandas = "1.3.4"
+Pillow = "^9.0.0"
+pyparsing = "^2.4.7"
+PyQt5 = "^5.15.4"
+PyQt5_Qt5 = "^5.15.2"
+PyQt5_sip = "^12.9.0"
+dill = "^0.3.4"
+future = "^0.18.2"
+python_dateutil = "^2.8.1"
+pytz = "^2021.1"
+scikit_learn = "^1.0.2"
+scipy = "^1.6.3"
+seaborn = "^0.11.1"
+six = "^1.16.0"
+statsmodels = "^0.13.0"
+Yapsy = "^1.12.2"
+Jinja2 = "^2.11.3"
+pytest = "7.0.1"
+pytest-qt = "4.0.2"
+
+[tool.poetry.urls]
+homepage = "https://cbica.github.io/NiChart"
+repository = "https://github.com/CBICA/NiChart"
+documentation = "https://cbica.github.io/NiChart"
+
+
+[tool.poetry.scripts]
+NiChart = "NiChart:main"

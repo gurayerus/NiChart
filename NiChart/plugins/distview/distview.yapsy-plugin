@@ -1,0 +1,21 @@
+[Core]
+Name = Dist View
+Module = distview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Plugin to plot distrubution of a selected variable
+    ---------- Options ----------
+    X Var: Variable to display on x axis
+    Filter Var: Used to select a subset of rows for plotting (optional)
+        Required: Categorical variable with less than 20 categories 
+    Hue Var: Used to select a categorical hue variable (optional)
+        Users can also select the categories to include in the plot 
+        Required: Categorical variable with less than 20 categories 
+
+[Tab]
+#tab position starts from 0
+Position = 3

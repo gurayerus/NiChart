@@ -1,0 +1,18 @@
+[Core]
+Name = Merge View
+Module = mergeview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Plugin for merging the active dataset to another dataset
+    ---------- Options ----------
+    Merge on: Variable(s) in active dataset to merge on
+    Second dataset: The dataset to merge to the active dataset
+    Merge on second: Variable(s) in second dataset to merge on
+
+[Tab]
+#tab position starts from 0
+Position = 4

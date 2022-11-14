@@ -1,0 +1,23 @@
+[Core]
+Name = Dataset View
+Module = dsetview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Plugin for selecting the active dataset
+        Users can load multiple datasets. However only one of them is "active". 
+        All plugins operate on the active dataset
+        Active dataset can only be selected in this plugin
+    ---------- Options ----------
+    File Name: Name of the initial file for the active dataset
+    Data Shape: Shape of the active dataset
+        Current data shape is displayed. The shape will change as the dataset is updated.
+    Sort by: Users can sort the dataset on two columns (optional)
+    Show Table: Displays the complete data table
+
+[Tab]
+#tab position starts from 0
+Position = 0

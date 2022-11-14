@@ -1,0 +1,22 @@
+[Core]
+Name = Normalize View
+Module = normalizeview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Plugin for normalizing selected variables in the active dataset
+    ---------- Options ----------
+    Divide by: The normalization variable
+    Apply to: Variables to apply the normalization.
+        Each variable is independently normalized.
+        Values are multiplied by 100 (so the final value denotes percent of the normalization variable)
+    Out suffix: Suffix to add to normalized variables 
+    Out category: Category for adjusted variables. 
+        New variables are added to the data dictionary with this category name
+
+[Tab]
+#tab position starts from 0
+Position = 6

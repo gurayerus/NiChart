@@ -1,0 +1,21 @@
+[Core]
+Name = Filter View
+Module = filterview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Applies filters to the active dataset to select a subset of the data
+    ---------- Options ----------
+    Select columns: Reduce data to selected columns
+    Filter Data: Reduce data to rows based on the filter on the selected column
+        Required: Categorical variable with less than 20 categories or numeric data
+    Drop Duplicates: Drop duplicates within the selected column(s)
+    ---------- Notes ----------
+    All filters are directly applied to the current active dataset and the data is replaced with the filtered one
+
+[Tab]
+#tab position starts from 0
+Position = 1
