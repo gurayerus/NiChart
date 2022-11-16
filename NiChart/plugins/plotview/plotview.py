@@ -274,8 +274,13 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
         ## Get data
         if len(filterVals)>0:
-            dtmp = self.data_model_arr.datasets[self.active_index].data[[xVar, yVar, filterVar, hueVar]]
-            str_allVars = ','.join('"{0}"'.format(x) for x in [xVar, yVar, filterVar, hueVar])
+            
+            ## Remove duplicates in selected vars
+            colSel = [*set([xVar, yVar, filterVar, hueVar])]
+            
+            
+            dtmp = self.data_model_arr.datasets[self.active_index].data[colSel]
+            str_allVars = ','.join('"{0}"'.format(x) for x in colSel)
         else:
             dtmp = self.data_model_arr.datasets[self.active_index].data[[xVar, yVar, hueVar]]
             str_allVars = ','.join('"{0}"'.format(x) for x in [xVar, yVar, hueVar])
@@ -284,6 +289,11 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
         ## Filter data
         if len(filterVals)>0:
+            logger.critical(dtmp[filterVar])
+            logger.critical(dtmp.columns)
+            logger.critical(filterVar)
+            logger.critical(filterVals)
+            
             dtmp = dtmp[dtmp[filterVar].isin(filterVals)]
             plot_cmds.append('DTMP = DTMP[DTMP' + '["' + filterVar + '"].isin([' + str_filterVals + '])]')
 

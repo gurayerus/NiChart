@@ -1,22 +1,16 @@
+import sys, os
+import pandas as pd
+import numpy as np
 from PyQt5.QtGui import *
 from PyQt5 import QtGui, QtCore, QtWidgets, uic
 from PyQt5.QtWidgets import QMdiArea, QMdiSubWindow, QTextEdit, QComboBox, QLayout
-import sys, os
-import pandas as pd
 from NiChart.core.dataio import DataIO
-# import dtale
 from NiChart.core.baseplugin import BasePlugin
 from NiChart.core import iStagingLogger
 from NiChart.core.gui.SearchableQComboBox import SearchableQComboBox
 from NiChart.core.gui.CheckableQComboBox import CheckableQComboBox
 from NiChart.core.plotcanvas import PlotCanvas
 from NiChart.core.model.datamodel import PandasModel
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from matplotlib.cm import get_cmap
-from matplotlib.lines import Line2D
 
 logger = iStagingLogger.get_logger(__name__)
 
@@ -25,17 +19,22 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
     def __init__(self):
         super(DsetView,self).__init__()
         
-        ## Variable to keep all datasets (was linked to a common variable for all plugins by mainwindow)
+        ## Array that keeps all datasets
+        ## All plugins point to the same data_model_arr
+        ## Initialized by the mainwindow during loading of plugin
         self.data_model_arr = None
+
+        ## Array that keeps all commands (used in notebook creation)
+        self.cmds = None
         
         ## Index of curr dataset
         self.active_index = -1
 
-        ## Variable to keeps commands (was linked to a common variable for all plugins by mainwindow)
-        self.cmds = None
-
+        ## Read path
         root = os.path.dirname(__file__)
         self.readAdditionalInformation(root)
+        
+        ## Load ui file
         self.ui = uic.loadUi(os.path.join(root, 'dsetview.ui'),self)
         
         ## Main view panel
@@ -61,19 +60,11 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboBoxSortVar2 = SearchableQComboBox(self.ui)
         self.ui.vlComboSort2.addWidget(self.ui.comboBoxSortVar2)       
 
-        #self.ui.wOptions.setMaximumWidth(300)
-        
-        #self.ui.mainVLayout.setSizeConstraint(QLayout.SetFixedSize)
-              
-
-        ## Info panel        
-        
-        ## Options panel is not shown if there is no dataset loaded
+        ## Options panel is not shown initially 
+        ## Shown when a dataset is loaded
         self.ui.wOptions.hide()
     
-    
     def SetupConnections(self):
-
         self.data_model_arr.active_dset_changed.connect(self.OnDataChanged)
 
         self.ui.showTableBtn.clicked.connect(self.OnShowTableBtnClicked)
@@ -83,8 +74,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboBoxSortCat2.currentIndexChanged.connect(self.OnSortCat2Changed)
 
 
-    def OnShowDictBtnClicked(self):
-        
+    def OnShowDictBtnClicked(self):      
         tmpDict = self.data_model_arr.data_dict.reset_index()
         self.PopulateTable(tmpDict)         ## Show dict in a table
         
@@ -95,7 +85,6 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.mdi.tileSubWindows()
 
     def OnShowTableBtnClicked(self):
-        
         currDset = self.ui.comboBoxDsets.currentText()
         
         ##-------
@@ -117,30 +106,28 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         ##-------
 
         ## Apply the sorting
-        # We keep an array of commands for saving them in a notebook
-        dset_name = self.data_model_arr.dataset_names[self.active_index]       
-        str_sortCols = ','.join('"{0}"'.format(x) for x in sortCols)
-        str_sortOrders = ','.join('"{0}"'.format(x) for x in sortOrders)
-
-
         if len(sortCols)>0:
+
+            # Variables required for preparing the notebook command
+            dset_name = self.data_model_arr.dataset_names[self.active_index]       
+            str_sortCols = ','.join('"{0}"'.format(x) for x in sortCols)
+            str_sortOrders = ','.join('"{0}"'.format(x) for x in sortOrders)
 
             logger.info('Sorting data by : ' + str_sortCols)
 
             # Get active dset, apply sort, reassign it
-            dtmp = self.data_model_arr.datasets[self.active_index].GetData()
+            dtmp = self.data_model_arr.datasets[self.active_index].data
             dtmp = dtmp.sort_values(sortCols, ascending=sortOrders)
             self.data_model_arr.datasets[self.active_index].data = dtmp
             
 
-        ## Show data table
+        ## Load data to data view
         tmpData = self.data_model_arr.datasets[self.active_index].data
         self.PopulateTable(tmpData)
 
-
+        ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
-        
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
@@ -155,38 +142,43 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         cmds.append('')
         self.cmds.add_cmds(cmds)
         ##-------
-        
-        
 
     def PopulateTable(self, data):
         model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
 
-    #add the values to comboBox
     def PopulateComboBox(self, cbox, values, strPlaceholder = None, currTxt = None):
         cbox.blockSignals(True)
         cbox.clear()
+
+        ## Add values to combo box
         cbox.addItems(values)
+        
+        ## Add a first row with placeholder text to the combo box
         if strPlaceholder is not None:
             cbox.setCurrentIndex(-1)
             cbox.setEditable(True)
             cbox.setCurrentText(strPlaceholder)
+        
+        ## Set the current text in the combo box
         if currTxt is not None:
             cbox.setCurrentText(currTxt)
         cbox.blockSignals(False)
         
     def OnSortCat1Changed(self):
+        
+        ## Read selected variable category, find variables in that category, add them to combo box
         selCat = self.ui.comboBoxSortCat1.currentText()
         tmpData = self.data_model_arr.datasets[self.active_index]
-        
         selVars = tmpData.data_cat_map.loc[[selCat]].VarName.tolist()
         self.PopulateComboBox(self.ui.comboBoxSortVar1, selVars)
 
     def OnSortCat2Changed(self):
+
+        ## Read selected variable category, find variables in that category, add them to combo box
         selCat = self.ui.comboBoxSortCat2.currentText()
         tmpData = self.data_model_arr.datasets[self.active_index]
-        
         selVars = tmpData.data_cat_map.loc[[selCat]].VarName.tolist()
         self.PopulateComboBox(self.ui.comboBoxSortVar2, selVars)
 
@@ -234,13 +226,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
             self.UpdateSortingPanel(catNames, colNames)
             
             ## Update dataset selection
-            #self.ui.comboBoxDsets.blockSignals(True)
-            #logger.critical('Calling cbox update S1')           
             self.PopulateComboBox(self.ui.comboBoxDsets, dataset_names, currTxt = dataset_names[self.active_index])
-            #logger.critical('Calling cbox update S2')
-            #self.ui.comboBoxDsets.setCurrentText(dataset_names[self.active_index])
-            #logger.critical('Calling cbox update S3')
-            #self.ui.comboBoxDsets.blockSignals(False)
 
     def UpdateSortingPanel(self, catNames, colNames):
         
@@ -272,20 +258,3 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         
         self.data_model_arr.OnDataChanged()
         
-
-        ### Get data variables
-        #dataset = self.data_model_arr.datasets[self.active_index]
-        #colNames = dataset.GetData().columns.tolist()
-        #fileName = os.path.basename(self.data_model_arr.datasets[self.active_index].file_name)
-        #dsetName = dataset.file_name
-        #dsetShape = dataset.data.shape
-        #catNames = dataset.data_cat_map.index.unique().tolist()
-
-        ### Set data info fields
-        #self.ui.edit_fname.setText(os.path.basename(dsetName))
-        #self.ui.edit_dshape.setText(str(dsetShape))
-
-        ### Update sorting panel
-        #self.UpdateSortingPanel(catNames, colNames)
-        
-
