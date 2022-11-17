@@ -33,14 +33,28 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         self.mdi = self.findChild(QMdiArea, 'mdiArea')       
         self.mdi.setBackground(QtGui.QColor(245,245,245,255))
                 
-        self.ui.comboBoxMergeField1 = CheckableQComboBox(self.ui)
-        self.ui.vlBAA.addWidget(self.ui.comboBoxMergeField1)
+        ## Panel for dset1 merge variables selection
+        self.ui.comboBoxMergeCat1 = CheckableQComboBox(self.ui)
+        self.ui.comboBoxMergeCat1.setEditable(False)
+        self.ui.vlComboMerge1.addWidget(self.ui.comboBoxMergeCat1)
+        
+        self.ui.comboBoxMergeVar1 = CheckableQComboBox(self.ui)
+        self.ui.comboBoxMergeVar1.setEditable(False)
+        self.ui.vlComboMerge1.addWidget(self.ui.comboBoxMergeVar1)
+        
 
+        ## Panel for dset2 selection
         self.ui.comboBoxDataset2 = QComboBox(self.ui)
-        self.ui.vlBBA.addWidget(self.ui.comboBoxDataset2)
+        self.ui.hlMergeDset2.addWidget(self.ui.comboBoxDataset2)
 
-        self.ui.comboBoxMergeField2 = CheckableQComboBox(self.ui)
-        self.ui.vlBBB.addWidget(self.ui.comboBoxMergeField2)
+        ## Panel for dset2 merge variables selection
+        self.ui.comboBoxMergeCat2 = CheckableQComboBox(self.ui)
+        self.ui.comboBoxMergeCat2.setEditable(False)
+        self.ui.vlComboMerge2.addWidget(self.ui.comboBoxMergeCat2)
+        
+        self.ui.comboBoxMergeVar2 = CheckableQComboBox(self.ui)
+        self.ui.comboBoxMergeVar2.setEditable(False)
+        self.ui.vlComboMerge2.addWidget(self.ui.comboBoxMergeVar2)
 
         self.ui.wOptions.setMaximumWidth(300)
         
@@ -53,7 +67,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
     def SetupConnections(self):
         self.data_model_arr.active_dset_changed.connect(lambda: self.OnDataChanged())        
 
-        self.ui.mergeDataBtn.clicked.connect(lambda: self.OnMergeDataBtnClicked())
+        self.ui.mergeBtn.clicked.connect(lambda: self.OnMergeDataBtnClicked())
 
         self.ui.comboBoxDataset2.currentIndexChanged.connect(lambda: self.OnDataset2Changed())
 
@@ -65,7 +79,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         
         colNames = self.data_model_arr.datasets[self.dataset2_index].data.columns.tolist()
         
-        self.PopulateComboBox(self.ui.comboBoxMergeField2, colNames)
+        self.PopulateComboBox(self.ui.comboBoxMergeVar2, colNames)
         
         logger.info('Dataset2 changed to : ' + selDsetName)
         logger.info('Dataset2 index changed to : ' + str(self.dataset2_index))
@@ -77,8 +91,8 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
         dset_name2 = self.data_model_arr.dataset_names[self.dataset2_index]        
         
-        mergeFields1 = self.ui.comboBoxMergeField1.listCheckedItems()
-        mergeFields2 = self.ui.comboBoxMergeField1.listCheckedItems()
+        mergeFields1 = self.ui.comboBoxMergeVar1.listCheckedItems()
+        mergeFields2 = self.ui.comboBoxMergeVar1.listCheckedItems()
 
         str_mergeFields1 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeFields1)
         str_mergeFields2 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeFields2)
@@ -134,7 +148,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
             self.ui.edit_dset1.setText(dsetName)
 
             colNames = self.data_model_arr.datasets[self.active_index].data.columns.tolist()
-            self.PopulateComboBox(self.ui.comboBoxMergeField1, colNames)
+            self.PopulateComboBox(self.ui.comboBoxMergeVar1, colNames)
 
             dataset_names = self.data_model_arr.dataset_names.copy()
             dataset_names.remove(dsetName)
