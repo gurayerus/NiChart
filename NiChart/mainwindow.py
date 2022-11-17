@@ -37,6 +37,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Variable to keep all commands (to create a notebook)
         self.cmds = CmdModel()
         
+        # Variable to keep path for the last data file loaded
+        self.dataPathLast = ''
+
+
         # Create plugin manager
         self.manager = PluginManager(categories_filter={ "Tabs": BasePlugin})
         root = os.path.dirname(__file__)
@@ -100,7 +104,8 @@ class MainWindow(QtWidgets.QMainWindow):
         for i, [key,value] in enumerate(self.Plugins.items()):
             self.ui.tabWidget.insertTab(i, value, key)
             if i>0:
-                self.ui.tabWidget.setTabVisible(i, False)
+                #self.ui.tabWidget.setTabVisible(i, False)
+                self.ui.tabWidget.setTabVisible(i, True)
                 
         if dataFile is not None:
             # if datafile provided on cmd line, load it
@@ -135,7 +140,7 @@ class MainWindow(QtWidgets.QMainWindow):
         logger.info('NiChart session ending...')
 
     def SetupConnections(self):
-        self.actionOpenData.triggered.connect(self.OnOpenDataClicked)
+        self.actionOpenData.triggered.connect(self.OnLoadDsetClicked)
         self.actionLoadDict.triggered.connect(self.OnLoadDictClicked)
         self.actionSaveData.triggered.connect(self.OnSaveDataClicked)
         self.actionSaveNotebook.triggered.connect(self.OnSaveNotebookClicked)
@@ -177,7 +182,8 @@ class MainWindow(QtWidgets.QMainWindow):
         root = os.path.dirname(__file__)
         self.ui = uic.loadUi(os.path.join(root, 'mainwindow.ui'), self)
         self.ui.setWindowTitle('NiChart')
-        self.setWindowIcon(QtGui.QIcon(":/images/NiChartLogo.png"))
+        #self.setWindowIcon(QtGui.QIcon(":/images/NiChartLogo.png"))
+        self.setWindowIcon(QtGui.QIcon(os.path.join(root, 'resources', 'NiChartLogo.png')))
         self.aboutdialog = AboutDialog(self)
 
     def LoadDataFile(self, filename):
@@ -286,21 +292,34 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
         self.cmds.add_cmds(cmds)
         ##-------
 
-    def OnOpenDataClicked(self):
+    def OnLoadDsetClicked(self):
+        
+        if self.dataPathLast == '':
+            directory = QtCore.QDir().homePath()
+        else:
+            directory = self.dataPathLast
+        
         filename = QtWidgets.QFileDialog.getOpenFileName(None,
             caption = 'Open data file',
-            directory = QtCore.QDir().homePath(),
+            directory = directory,
             filter = "Pickle/CSV files (*.pkl.gz *.pkl *.csv)")
 
         if filename[0] == "":
             logger.warning("No file was selected")
         else:
             self.LoadDataFile(filename[0])
+            self.dataPathLast = os.path.dirname(filename[0])
 
     def OnLoadDictClicked(self):
+
+        if self.dataPathLast == '':
+            directory = QtCore.QDir().homePath()
+        else:
+            directory = self.dataPathLast
+
         filename = QtWidgets.QFileDialog.getOpenFileName(None,
             caption = 'Open dictionary file',
-            directory = QtCore.QDir().homePath(),
+            directory = directory,
             filter = "Json/CSV files (*.json *.csv)")
 
         if filename[0] == "":

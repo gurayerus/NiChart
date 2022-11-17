@@ -55,6 +55,11 @@ class DataModelArr(QObject):
         QObject.__init__(self)
         """The constructor."""
         
+        ## Table view is very slow if there are many rows
+        ## We limit it here as a shortcut solution
+        ## FIXME: Find a good way of managing this
+        self.TABLE_MAXROWS = 20
+        
         self._datasets = []         ## An array of datasets
         self._data_dict = None      ## Data dictionary
                                     ## Note: We keep a single dictionary and concat multiple

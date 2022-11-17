@@ -168,7 +168,14 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.data_model_arr.datasets[self.active_index].data = dtmp
 
 
-        self.PopulateTable()
+        ## Load data to data view
+        tmpData = self.data_model_arr.datasets[self.active_index].data
+        
+        ## Reduce data size (to reduce load in table view)
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        #tmpData = tmpData[tmpData.columns[0:30]]
+        
+        self.PopulateTable(tmpData)
 
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
@@ -202,7 +209,15 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
 
         ## Show data table
         self.dataView = QtWidgets.QTableView()
-        self.PopulateTable()
+
+        ## Load data to data view
+        tmpData = self.data_model_arr.datasets[self.active_index].data
+        
+        ## Reduce data size (to reduce load in table view)
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        #tmpData = tmpData[tmpData.columns[0:30]]
+        
+        self.PopulateTable(tmpData)
 
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
@@ -225,11 +240,12 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.cmds.add_cmds(cmds)
         ##-------
 
-    def PopulateTable(self):
-        tmpData = self.data_model_arr.datasets[self.active_index].data
-        model = PandasModel(tmpData)
+
+    def PopulateTable(self, data):
+        model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
+        
 
     #add the values to comboBox
     def PopulateComboBox(self, cbox, values, strPlaceholder = None, bypassCheckable=False):

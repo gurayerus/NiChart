@@ -105,11 +105,13 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
                 sortOrders.append(False)
         ##-------
 
+        # Variables required for preparing the notebook command
+        dset_name = self.data_model_arr.dataset_names[self.active_index]       
+
         ## Apply the sorting
         if len(sortCols)>0:
 
             # Variables required for preparing the notebook command
-            dset_name = self.data_model_arr.dataset_names[self.active_index]       
             str_sortCols = ','.join('"{0}"'.format(x) for x in sortCols)
             str_sortOrders = ','.join('"{0}"'.format(x) for x in sortOrders)
 
@@ -123,6 +125,11 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
 
         ## Load data to data view
         tmpData = self.data_model_arr.datasets[self.active_index].data
+        
+        ## Reduce data size
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        #tmpData = tmpData[tmpData.columns[0:30]]
+        
         self.PopulateTable(tmpData)
 
         ## Set data view to mdi widget
