@@ -320,6 +320,7 @@ class DataModel(QObject):
 
     #############################
     ## Concat data dictionaries
+    ##   Used for updating the dict during the merge of dsets
     def ConcatDict(self, dfDict):
 
         self.data_dict = pd.concat([self.data_dict, dfDict]).drop_duplicates(subset='VarName')
