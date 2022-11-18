@@ -301,7 +301,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
             self.PopulateComboBox(self.ui.comboBoxSelCat, catNames, '--var group--', bypassCheckable=True)
             self.PopulateComboBox(self.ui.comboBoxFilterCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboBoxSelDuplCat, catNames, '--var group--', bypassCheckable=True)
-        self.PopulateComboBox(self.ui.comboBoxSelVar, colNames)
+        self.PopulateComboBox(self.ui.comboBoxSelVar, colNames, '--var name--')
         self.PopulateComboBox(self.ui.comboBoxFilterVar, colNames, '--var name--')
         self.PopulateComboBox(self.ui.comboBoxSelDuplVar, colNames, '--var name--')
     
