@@ -13,23 +13,19 @@ from NiChart.NiChartCmdApp import NiChartCmdApp
 
 def main():
     parser = argparse.ArgumentParser(description='NiChart Data Visualization and Preparation')
-    parser.add_argument('--data_file', type=str, help='Data file containing data frame.', default=None, required=False)
-    parser.add_argument('--dict_file', type=str, help='Dict file containing data dictionary.', default=None, required=False)
+    parser.add_argument('--data_file', type=str, help='Data file containing data frame. Users can use --data_file multiple times to load additional data files', default=None, required=False, action='append')
+    parser.add_argument('--dict_file', type=str, help='Dict file containing data dictionary. Users can use --data_dict multiple times to load additional data dictionaries', default=None, required=False, action='append')
     parser.add_argument("-nogui", action="store_true", help="Launch application in CLI mode to do data processing without any visualization or graphical user interface.")
 
     args = parser.parse_args(sys.argv[1:])
 
-    data_file = args.data_file
-    dict_file = args.dict_file
+    data_files = args.data_file
+    dict_files = args.dict_file
     noGUI = args.nogui
 
     if(noGUI):
         app = QtCore.QCoreApplication(sys.argv)
-        if(compute_spares):
-            if((data_file == None) or (SPARE_model_file == None) or (output_file == None)):
-                print("Please provide '--data_file', '--SPARE_model_file' and '--output_file_name' to compute spares.")
-                exit()
-            NiChartCmdApp().ComputeSpares(data_file, SPARE_model_file, output_file)
+        
     else:
         app = QtWidgets.QApplication(sys.argv)
         
@@ -38,7 +34,7 @@ def main():
             style = f.read()
         app.setStyleSheet(style)
         
-        mw = MainWindow(dataFile = data_file, dictFile = dict_file)
+        mw = MainWindow(dataFiles = data_files, dictFiles = dict_files)
         mw.show()
 
         sys.exit(app.exec_())

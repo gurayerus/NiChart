@@ -23,7 +23,7 @@ from NiChart.core import iStagingLogger
 logger = iStagingLogger.get_logger(__name__)
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, dataFile = None, dictFile = None):
+    def __init__(self, dataFiles = None, dictFiles = None):
         super(MainWindow,self).__init__()
 
         logger.info('New NiChart session starting...')
@@ -107,15 +107,17 @@ class MainWindow(QtWidgets.QMainWindow):
                 #self.ui.tabWidget.setTabVisible(i, False)
                 self.ui.tabWidget.setTabVisible(i, True)
                 
-        if dataFile is not None:
+        if dataFiles is not None:
             # if datafile provided on cmd line, load it
             #self.Plugins['Table View'].LoadDataFile(dataFile)
-            self.LoadDataFile(dataFile)
+            for dTmp in dataFiles:
+                self.LoadDataFile(dTmp)
         
-        if dictFile is not None:
+        if dictFiles is not None:
             # if datafile provided on cmd line, load it
             #self.Plugins['Table View'].LoadDataFile(dataFile)
-            self.LoadDictFile(dictFile)
+            for dTmp in dictFiles:
+                self.LoadDictFile(dTmp)
 
         ## Info panel        
         self.ui.wInfo.setStyleSheet('background-color : rgb(10, 10, 50); color: rgb(230, 230, 230)')
@@ -227,6 +229,9 @@ class MainWindow(QtWidgets.QMainWindow):
         
     def LoadDictFile(self, filename):
         #read input data
+        
+        logger.critical(filename)
+        
         
         ## Keep initial condition for the data dict
         isDictNone = self.data_model_arr.data_dict is None

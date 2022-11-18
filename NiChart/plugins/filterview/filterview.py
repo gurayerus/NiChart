@@ -43,7 +43,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.ui.vlComboSel.addWidget(self.ui.comboBoxSelVar)
 
         ## Panel for data filtering
-        self.ui.comboBoxFilterCat = CheckableQComboBox(self.ui)
+        self.ui.comboBoxFilterCat = QComboBox(self.ui)
         self.ui.comboBoxFilterCat.setEditable(False)
         self.ui.vlComboFilter.addWidget(self.ui.comboBoxFilterCat)
         #self.ui.comboBoxFilterCat.hide()
@@ -294,7 +294,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
             self.ui.comboBoxFilterCat.show()
             self.ui.comboBoxSelDuplCat.show()
             self.PopulateComboBox(self.ui.comboBoxSelCat, catNames, '--var group--', bypassCheckable=True)
-            self.PopulateComboBox(self.ui.comboBoxFilterCat, catNames, '--var group--', bypassCheckable=True)
+            self.PopulateComboBox(self.ui.comboBoxFilterCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboBoxSelDuplCat, catNames, '--var group--', bypassCheckable=True)
         self.PopulateComboBox(self.ui.comboBoxSelVar, colNames)
         self.PopulateComboBox(self.ui.comboBoxFilterVar, colNames, '--var name--')
