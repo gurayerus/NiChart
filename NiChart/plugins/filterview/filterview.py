@@ -73,7 +73,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
         
-        #self.ui.wOptions.setMaximumWidth(300)
+        self.ui.wOptions.setMaximumWidth(300)
         
         ## Type of filter column (numeric or categorical)
         self.filter_column_type = None
@@ -237,6 +237,11 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
 
 
     def PopulateTable(self, data):
+
+        ### FIXME : Data is truncated to single precision for the display
+        ### Add an option in settings to let the user change this
+        data = data.round(1)
+
         model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)

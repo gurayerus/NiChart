@@ -85,6 +85,7 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
 
+        self.ui.wOptions.setMaximumWidth(300)
     
 
     def SetupConnections(self):

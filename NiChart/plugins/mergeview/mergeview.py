@@ -88,50 +88,75 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         logger.info('Dataset2 changed to : ' + selDsetName)
         logger.info('Dataset2 index changed to : ' + str(self.dataset2_index))
 
+    ## Merge datasets
+    def MergeData(self, df1, df2, mergeOn1, mergeOn2):
+
+        dfOut = df1.merge(df2, left_on = mergeOn1, right_on = mergeOn2, suffixes=['','_DUPLVARINDF2'])
+        
+        ## If there are additional vars with the same name, we keep only the ones from the first dataset
+        dfOut = dfOut[dfOut.columns[dfOut.columns.str.contains('_DUPLVARINDF2')==False]]
+        
+        return dfOut
+
 
     def OnMergeDataBtnClicked(self):
 
-        plot_cmds = []
+        ## Read merge options
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
         dset_name2 = self.data_model_arr.dataset_names[self.dataset2_index]        
         
-        mergeFields1 = self.ui.comboBoxMergeVar1.listCheckedItems()
-        mergeFields2 = self.ui.comboBoxMergeVar1.listCheckedItems()
+        mergeOn1 = self.ui.comboBoxMergeVar1.listCheckedItems()
+        mergeOn2 = self.ui.comboBoxMergeVar2.listCheckedItems()
 
-        str_mergeFields1 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeFields1)
-        str_mergeFields2 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeFields2)
-
-        dtmp1 = self.data_model_arr.datasets[self.active_index].data
-        dtmp2 = self.data_model_arr.datasets[self.dataset2_index].data
+        dfCurr = self.data_model_arr.datasets[self.active_index].data
+        dfDset2 = self.data_model_arr.datasets[self.dataset2_index].data
         
-        dtmp1 = dtmp1.merge(dtmp2, left_on = mergeFields1, right_on = mergeFields2)
-        
-        self.data_model_arr.datasets[self.active_index].data = dtmp1
-    
-        plot_cmds.append(dset_name + ' = ' + dset_name + '.merge(' + dset_name2 + 
-                         ', right_on = [' + str_mergeFields1 +'], left_on = [' + str_mergeFields2 + '])')
+        ## Apply merge
+        dfOut = self.MergeData(dfCurr, dfDset2, mergeOn1, mergeOn2)
 
-        plot_cmds.append(dset_name + '.head()')
-    
-        self.dataView = QtWidgets.QTableView()
+        # Set updated dset
+        self.data_model_arr.datasets[self.active_index].data = dfOut
+
+        ## Concat dictionaries of the two datasets
+        dict2 = self.data_model_arr.datasets[self.dataset2_index].data_dict
+        self.data_model_arr.datasets[self.active_index].ConcatDict(dict2)
+        
+        ## Call signal for change in data
+        self.data_model_arr.OnDataChanged()
         
         ## Load data to data view (reduce data size to make the app run faster)
+        ##   This view shows only the out variables
         tmpData = self.data_model_arr.datasets[self.active_index].data
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
         self.PopulateTable(tmpData)
 
-        self.cmds.add_cmd('')
-        self.cmds.add_cmds(plot_cmds)
-        self.cmds.add_cmd('')
-
+        ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
-        
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
 
+        ###-------      FIXME    add commands for normalization
+        ### Populate commands that will be written in a notebook
+        #cmds = ['']
+        #cmds.append('')
+        #self.cmds.add_cmds(cmds)
+        ###-------
+
+        #str_mergeOn1 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeOn1)
+        #str_mergeOn2 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeOn2)
+        #plot_cmds.append(dset_name + ' = ' + dset_name + '.merge(' + dset_name2 + 
+                         #', right_on = [' + str_mergeOn1 +'], left_on = [' + str_mergeOn2 + '])')
+        #plot_cmds.append(dset_name + '.head()')
+        
+
     def PopulateTable(self, data):
+        
+        ### FIXME : Data is truncated to single precision for the display
+        ### Add an option in settings to let the user change this
+        data = data.round(1)
+        
         model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
@@ -155,8 +180,8 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         
     def OnDataChanged(self):
 
-        ## rge , there should be at least 2 datasets
-        if self.data_model_arr.active_index >= 1:
+        ## For the merge, there should be at least 2 datasets
+        if len(self.data_model_arr.datasets) > 1:
      
             ## Make options panel visible
             self.ui.wOptions.show()

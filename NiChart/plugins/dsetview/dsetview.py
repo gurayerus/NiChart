@@ -62,6 +62,9 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
 
         ## Options panel is not shown initially 
         ## Shown when a dataset is loaded
+        
+        self.ui.wOptions.setMaximumWidth(300)
+        
         self.ui.wOptions.hide()
     
     def SetupConnections(self):
@@ -122,14 +125,9 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
             dtmp = dtmp.sort_values(sortCols, ascending=sortOrders)
             self.data_model_arr.datasets[self.active_index].data = dtmp
             
-
-        ## Load data to data view
+        ## Load data to data view (reduce data size to make the app run faster)
         tmpData = self.data_model_arr.datasets[self.active_index].data
-        
-        ## Reduce data size
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
-        #tmpData = tmpData[tmpData.columns[0:30]]
-        
         self.PopulateTable(tmpData)
 
         ## Set data view to mdi widget
@@ -151,6 +149,11 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         ##-------
 
     def PopulateTable(self, data):
+        
+        ### FIXME : Data is truncated to single precision for the display
+        ### Add an option in settings to let the user change this
+        data = data.round(1)
+        
         model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
@@ -227,7 +230,10 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
 
             ## Set data info fields
             self.ui.edit_fname.setText(os.path.basename(dsetName))
+            self.ui.edit_fname.setCursorPosition(0)
+            
             self.ui.edit_dshape.setText(str(dsetShape))
+            self.ui.edit_dshape.setCursorPosition(0)
 
             ## Update sorting panel
             self.UpdateSortingPanel(catNames, colNames)

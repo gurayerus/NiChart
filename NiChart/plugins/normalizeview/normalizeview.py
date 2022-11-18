@@ -52,6 +52,9 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
 
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
+        
+        self.ui.wOptions.setMaximumWidth(300)
+        
 
     def SetupConnections(self):
         
@@ -98,9 +101,13 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         selVars = tmpData.data_cat_map.loc[[selCat]].VarName.tolist()
         self.PopulateComboBox(self.ui.comboBoxDivideByVar, selVars)
 
-    def PopulateTable(self):
-        tmpData = self.data_model_arr.datasets[self.active_index].data
-        model = PandasModel(tmpData)
+    def PopulateTable(self, data):
+        
+        ### FIXME : Data is truncated to single precision for the display
+        ### Add an option in settings to let the user change this
+        data = data.round(1)
+
+        model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
 
@@ -174,9 +181,18 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         
         ## Update data dictionary
         self.data_model_arr.AddDataDict(dfDict)
+        
+    ## Normalize data by the given variable
+    def NormalizeData(self, df, selVars, normVar, outSuff='_NORM'):
+        dfNorm = 100 * df[selVars].div(df[normVar], axis=0)
+        dfNorm = dfNorm.add_suffix(outSuff)
+        newVars = dfNorm.columns.tolist()
+        dfOut = pd.concat([df, dfNorm], axis=1)        
+        return dfOut, newVars
     
     def OnNormalizeBtnClicked(self):
         
+        ## Read normalize options
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
         normVar = self.ui.comboBoxDivideByVar.currentText()
@@ -185,29 +201,32 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         outSuff = self.ui.edit_outSuff.text()
         outCat = self.ui.edit_outCat.text()
 
-        logger.info(normVar)
-        logger.info(selVars)
+        #logger.info(normVar)
+        #logger.info(selVars)
 
         # Get active dset, apply normalization
-        dtmp = self.data_model_arr.datasets[self.active_index].data   
-        dnorm = 100 * dtmp[selVars].div(dtmp[normVar], axis=0)
-        dnorm = dnorm.add_suffix(outSuff)
-        outVars = dnorm.columns.tolist()
-        dtmp = pd.concat([dtmp, dnorm], axis=1)
-        self.data_model_arr.datasets[self.active_index].data = dtmp
+        dfCurr = self.data_model_arr.datasets[self.active_index].data
+        dfNorm, newVars = self.NormalizeData(dfCurr, selVars, normVar, outSuff)
+
+        # Set updated dset
+        self.data_model_arr.datasets[self.active_index].data = dfNorm
         
         ## Create dict with info about new columns
-        self.AddNewVarsToDict(outVars, outCat = outCat)
+        self.AddNewVarsToDict(newVars, outCat = outCat)
             
         ## Call signal for change in data
         self.data_model_arr.OnDataChanged()
         
+        ## Load data to data view (reduce data size to make the app run faster)
+        ##   This view shows only the out variables
+        tmpData = self.data_model_arr.datasets[self.active_index].data
+        tmpData = tmpData[newVars]
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        self.PopulateTable(tmpData)
 
-        self.PopulateTable()
-
+        ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
-        
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()

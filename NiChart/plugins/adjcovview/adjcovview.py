@@ -81,6 +81,9 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
 
+        self.ui.wOptions.setMaximumWidth(300)
+        
+
 
     def SetupConnections(self):
         self.data_model_arr.active_dset_changed.connect(lambda: self.OnDataChanged())
@@ -184,7 +187,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     ## It runs independently for each outcome variable
     ## The estimation is done on the selected subset and then applied to all samples
     ## The user can indicate covariates that will be corrected and not
-    def AdjCov(self, df, outVars, covCorrVars, covKeepVars=None, selCol=None, selVals=None, outSuff='_Corr'):
+    def AdjCov(self, df, outVars, covCorrVars, covKeepVars=None, selCol=None, selVals=None, outSuff='_COVADJ'):
         
         dfInit = df.copy()
         
@@ -255,7 +258,6 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
 
     def OnAdjCovBtnClicked(self):
         
-        plot_cmds = []
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
         ## Read data

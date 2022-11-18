@@ -78,7 +78,7 @@ class DistView(QtWidgets.QWidget,BasePlugin):
         #self.ui.helpBtn.setGeometry(0, 0, 50, 50)
         #self.ui.helpBtn.setStyleSheet("background-color : rgb(140, 30, 50)")
 
-        #self.ui.wOptions.setMaximumWidth(300)
+        self.ui.wOptions.setMaximumWidth(300)
 
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()

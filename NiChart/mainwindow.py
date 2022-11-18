@@ -199,10 +199,6 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             d = None
 
-        ### FIXME : Data is truncated to single precision this should be done 
-        ### only in display. For now it's done on init data directly
-        d = d.round(1)
-
         # Load data to model
         if (d is not None):
             logger.info('New data read from file: %s', filename)

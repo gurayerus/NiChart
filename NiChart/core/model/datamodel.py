@@ -176,7 +176,7 @@ class DataModelArr(QObject):
 
         ## Apply updated data dict on each dataset
         
-        if len(self.datasets) > 0:                              ## FIXME this is not necessary
+        if len(self.datasets) > 0:
             for i in np.arange(0, len(self.datasets)):
                 self.datasets[i].ApplyDict(self.data_dict)
 
@@ -205,6 +205,7 @@ class DataModel(QObject):
             ## Create dict with default placeholder values
             dictCols = ['VarName', 'VarDesc', 'VarCat', 'SourceDict']
             dfDict = pd.DataFrame(index = data.columns, columns = dictCols)
+            dfDict.index.name = 'Var'
             dfDict['VarName'] = dfDict.index
             dfDict['VarDesc'] = 'No Description'
             #dfDict['VarDesc'] = dfDict.VarDesc.apply(lambda x: [x])
@@ -301,7 +302,7 @@ class DataModel(QObject):
     #############################
     ## If data columns change , update the dictionary and mapping btw categories and var names
     ##   based on current columns
-    def UpdateDictNewCols(self, newCols):
+    def addNewColsToDict(self, newCols):
         tmpDf = pd.DataFrame(data = newCols, columns = ['VarName'])
         tmpDf['Var'] = tmpDf.VarName
         tmpDf = tmpDf.set_index('Var')
@@ -318,6 +319,26 @@ class DataModel(QObject):
 
 
     #############################
+    ## Concat data dictionaries
+    def ConcatDict(self, dfDict):
+
+        self.data_dict = pd.concat([self.data_dict, dfDict]).drop_duplicates(subset='VarName')
+
+        ## Update mapping for categories
+        df1 = self.data_dict
+        df2 = pd.DataFrame(df1['VarCat'].tolist())
+        df2['VarName'] = df1.VarName.tolist()
+        
+        tmpList = []
+        for tmpCol in df2.columns[0:-1]:
+            tmpList.append(df2[[tmpCol,'VarName']].dropna().set_index(tmpCol))
+        df2 = pd.concat(tmpList).sort_index()
+        
+        self.data_cat_map = df2
+        
+
+
+    #############################
     ## Add the data dictionary
     def ApplyDict(self, dfDict):
 
@@ -329,14 +350,16 @@ class DataModel(QObject):
         """  - Created automatically by a process to annotate new variables added to the data"""
         
         ## Update dict
-        ## If there are new columns in data file, add them to dict with default values
+        ##   If there are new columns in the data file,
+        ##   add rows to the dictionary of the dataset with placeholder values,
+        ##   and they will be updated with values coming from dfDict
         if self.data.shape[0]>0:
             currCols = self.data.columns.tolist()
             dictVars = self.data_dict.VarName.tolist()
             newCols = list(set(currCols).difference(set(dictVars)))
             
             if len(newCols)>0:
-                self.UpdateDictNewCols(newCols)
+                self.addNewColsToDict(newCols)
 
             #self.UpdateDict(self.data.columns.tolist())
 
@@ -353,7 +376,7 @@ class DataModel(QObject):
             tmpList = []
             for tmpCol in df2.columns[0:-1]:
                 tmpList.append(df2[[tmpCol,'VarName']].dropna().set_index(tmpCol))
-            df2 = pd.concat(tmpList)
+            df2 = pd.concat(tmpList).sort_index()
             
             self.data_cat_map = df2
 
