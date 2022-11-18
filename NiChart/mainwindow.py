@@ -114,8 +114,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.LoadDataFile(dTmp)
         
         if dictFiles is not None:
-            # if datafile provided on cmd line, load it
-            #self.Plugins['Table View'].LoadDataFile(dataFile)
             for dTmp in dictFiles:
                 self.LoadDictFile(dTmp)
 
@@ -128,8 +126,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.wInfo.hide()
 
         #self.actionSaveData.setVisible(False)
-        self.actionSaveData.setEnabled(False)
-        self.actionSaveNotebook.setEnabled(False)
+
+        #self.actionSaveData.setEnabled(False)
+        #self.actionSaveNotebook.setEnabled(False)
         
         self.actionHelpConsole.setCheckable(True)
         
@@ -201,12 +200,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Load data to model
         if (d is not None):
+
+            logger.info('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+
             logger.info('New data read from file: %s', filename)
             dmodel= DataModel(d, filename)
             self.data_model_arr.AddDataset(dmodel)
 
             self.actionSaveData.setEnabled(True)
             self.actionSaveNotebook.setEnabled(True)
+
+            logger.info('BBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             
             ## Call signal for change in data
             self.data_model_arr.OnDataChanged()
