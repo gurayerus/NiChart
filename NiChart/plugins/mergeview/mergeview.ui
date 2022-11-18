@@ -177,7 +177,7 @@
                             </item>
 
                             <item>
-                            <widget  class="QLabel"  name="label_select">
+                            <widget  class="QLabel"  name="label_mergeon2">
                                 <property  name="text">
                                 <string>Merge On</string>
                                 </property>

@@ -141,7 +141,7 @@
                                 </spacer>
                                 </item>
                                 <item>
-                                <layout  class="QVBoxLayout"  name="vlComboSel"/>
+                                    <layout  class="QVBoxLayout"  name="vlComboSel"/>
                                 </item>
                             </layout>
                             </item>

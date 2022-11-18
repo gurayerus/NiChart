@@ -168,13 +168,9 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.data_model_arr.datasets[self.active_index].data = dtmp
 
 
-        ## Load data to data view
+        ## Load data to data view (reduce data size to make the app run faster)
         tmpData = self.data_model_arr.datasets[self.active_index].data
-        
-        ## Reduce data size (to reduce load in table view)
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
-        #tmpData = tmpData[tmpData.columns[0:30]]
-        
         self.PopulateTable(tmpData)
 
         sub = QMdiSubWindow()
@@ -183,6 +179,9 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+        
+        ## Call signal for change in data
+        self.data_model_arr.OnDataChanged()        
 
         ##-------
         ## Populate commands that will be written in a notebook
@@ -210,13 +209,9 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         ## Show data table
         self.dataView = QtWidgets.QTableView()
 
-        ## Load data to data view
+        ## Load data to data view (reduce data size to make the app run faster)
         tmpData = self.data_model_arr.datasets[self.active_index].data
-        
-        ## Reduce data size (to reduce load in table view)
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
-        #tmpData = tmpData[tmpData.columns[0:30]]
-        
         self.PopulateTable(tmpData)
 
         sub = QMdiSubWindow()
@@ -247,7 +242,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.dataView.setModel(model)
         
 
-    #add the values to comboBox
+    # Add the values to comboBox
     def PopulateComboBox(self, cbox, values, strPlaceholder = None, bypassCheckable=False):
         cbox.blockSignals(True)
         cbox.clear()
@@ -327,7 +322,11 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.data_model_arr.datasets[self.active_index].data = dtmp
 
         self.dataView = QtWidgets.QTableView()
-        self.PopulateTable()
+
+        ## Load data to data view (reduce data size to make the app run faster)
+        tmpData = self.data_model_arr.datasets[self.active_index].data
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        self.PopulateTable(tmpData)
 
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
@@ -335,6 +334,9 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+        
+        ## Call signal for change in data
+        self.data_model_arr.OnDataChanged()
 
         ##-------
         ## Populate commands that will be written in a notebook
