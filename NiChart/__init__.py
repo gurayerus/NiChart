@@ -23,6 +23,9 @@ def main():
     dict_files = args.dict_file
     noGUI = args.nogui
 
+    print('AAA')
+    print(os.path.dirname(__file__))
+
     if(noGUI):
         app = QtCore.QCoreApplication(sys.argv)
         
@@ -30,7 +33,8 @@ def main():
         app = QtWidgets.QApplication(sys.argv)
         
         # Set the style sheet
-        with open('./style.qss', 'r') as f:         ## FIXME this is absolute path to curr dir
+        styleFile = os.path.join(os.path.dirname(__file__), 'NiChart_Stylesheet.qss')
+        with open(styleFile, 'r') as f:         ## FIXME this is absolute path to curr dir
             style = f.read()
         app.setStyleSheet(style)
         
