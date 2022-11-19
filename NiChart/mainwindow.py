@@ -62,6 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
             po = plugin.plugin_object
             po.data_model_arr = self.data_model_arr
             po.cmds = self.cmds
+            po.statusbar = self.ui.statusbar
             po.SetupConnections()
     
             plTmp.append(po)
@@ -119,6 +120,9 @@ class MainWindow(QtWidgets.QMainWindow):
         ## Info panel        
         self.ui.wInfo.setStyleSheet('background-color : rgb(10, 10, 50); color: rgb(230, 230, 230)')
 
+        ## Statusbar
+        self.ui.statusbar.setStyleSheet('background-color : rgb(10, 10, 50); color: rgb(230, 230, 230)')
+
         #self.ui.wInfo.setMinimumSize(600, 200)
         #self.SetHelpMsg()
 
@@ -154,12 +158,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def makeOnPluginChecked(self, pluginName):
         def OnPluginChecked(checked):
-            tabIndex = self.IndexPlugins[pluginName]            
+            tabIndex = self.IndexPlugins[pluginName]
             if checked==True:
                 self.ui.tabWidget.setTabVisible(tabIndex, True)
+                self.ui.statusbar.showMessage('Plugin activated: ' + pluginName)
+                
             else:
                 self.ui.tabWidget.setTabVisible(tabIndex, False)
+                self.ui.statusbar.showMessage('Plugin deactivated: ' + pluginName)
         
+
         return OnPluginChecked
 
  
@@ -173,9 +181,11 @@ class MainWindow(QtWidgets.QMainWindow):
         
         if self.actionHelpConsole.isChecked():
             self.ui.wInfo.show()
+            self.ui.statusbar.showMessage('Help Console activated')
 
         else:
             self.ui.wInfo.hide()
+            self.ui.statusbar.showMessage('Help Console deactivated')
         
  
     def SetupUi(self):
@@ -200,8 +210,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Load data to model
         if (d is not None):
 
-            logger.info('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-
             logger.info('New data read from file: %s', filename)
             dmodel= DataModel(d, filename)
             self.data_model_arr.AddDataset(dmodel)
@@ -209,21 +217,24 @@ class MainWindow(QtWidgets.QMainWindow):
             self.actionSaveData.setEnabled(True)
             self.actionSaveNotebook.setEnabled(True)
 
-            logger.info('BBBBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-            
             ## Call signal for change in data
             self.data_model_arr.OnDataChanged()
 
+            self.ui.statusbar.showMessage('Loaded dataset: ' + filename)
+
         else:
             logger.warning('Loaded data was not valid.')
+            self.ui.statusbar.showMessage('WARNING: Could not load dataset: ' + filename)
 
-            
+
         ##-------
         ## Populate commands that will be written in a notebook
         if (d is not None):
             dset_name = self.data_model_arr.dataset_names[self.data_model_arr.active_index]            
-            cmd_txt = dset_name + " = pd.read_csv('" + filename + "')"
-            self.cmds.add_cmd(cmd_txt)
+            cmds = ['']
+            cmds.append('# Load dataset')
+            cmds.append(dset_name + ' = pd.read_csv("' + filename + '")')
+            self.cmds.add_cmds(cmds)
         ##-------
         
     def LoadDictFile(self, filename):
@@ -263,8 +274,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.actionSaveData.setEnabled(True)
             self.actionSaveNotebook.setEnabled(True)
 
+            self.ui.statusbar.showMessage('Loaded dictionary: ' + filename)
+
         else:
             logger.warning('Loaded dict was not valid.')
+            self.ui.statusbar.showMessage('WARNING: Could not load dictionary: ' + filename)
 
 
         ##-------
@@ -272,6 +286,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         ## Add code to read the dict file and merge it to main dict
         cmds = ['']
+        cmds.append('# Adding dictionary file')
         cmds.append('dfTmp = pd.read_csv("' + filename + '")')
         
         cmds.append('dfTmp["VarCat"] = [[e for e in row if e==e] for row in \
@@ -334,9 +349,15 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
     ## Function to write commands into a notebook
     ##   Commands are collected from individual actions within plugins
     def OnSaveNotebookClicked(self):
+
+        if self.dataPathLast == '':
+            directory = QtCore.QDir().homePath()
+        else:
+            directory = self.dataPathLast
+        
         filename = QtWidgets.QFileDialog.getSaveFileName(None,
             caption = 'Save as a notebook',
-            directory = QtCore.QDir().homePath(),
+            directory = directory,
             filter = "Jupyter notebook files (*.ipynb)")[0]
         if filename[-6:] != '.ipynb':
             filename = filename + '.ipynb'
@@ -348,6 +369,9 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
         logger.info('--------------------------------------------')
         
         self.cmds.cmds_to_notebook(filename)
+        
+        self.ui.statusbar.showMessage('Notebook saved to: ' + filename)
+
 
     ## Function to write current data frame to csv file
     def OnSaveDataClicked(self):
@@ -360,10 +384,13 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
         
         self.data_model_arr.datasets[self.data_model_arr.active_index].data.to_csv(filename, index=False)
 
+        self.ui.statusbar.showMessage('Datafile saved to: ' + filename)
+
         ##-------
         ## Populate commands that will be written in a notebook
         dset_name = self.data_model_arr.dataset_names[self.data_model_arr.active_index]        
         cmds = ['']
+        cmds.append('Saving data file')        
         cmds.append('pd.to_csv( "' + dset_name + '", index=False)')
         cmds.append('')
         self.cmds.add_cmds(cmds)
@@ -371,6 +398,8 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
 
     def OnAboutClicked(self):
         self.aboutdialog.show()
+        self.ui.statusbar.showMessage('Info Console activated')
+        
 
     def OnCloseClicked(self):
         #close currently loaded data and model

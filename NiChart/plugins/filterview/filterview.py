@@ -160,13 +160,13 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
 
-        selCols = self.ui.comboBoxSelDuplVar.listCheckedItems()
+        selVars = self.ui.comboBoxSelDuplVar.listCheckedItems()
 
-        str_selCols = ','.join('"{0}"'.format(x) for x in selCols)
+        str_selVars = ','.join('"{0}"'.format(x) for x in selVars)
 
         # Get active dset, apply drop, reassign it
         dtmp = self.data_model_arr.datasets[self.active_index].data   
-        dtmp = dtmp.drop_duplicates(subset=selCols)
+        dtmp = dtmp.drop_duplicates(subset=selVars)
         self.data_model_arr.datasets[self.active_index].data = dtmp
 
 
@@ -188,7 +188,8 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         ##-------
         ## Populate commands that will be written in a notebook
         cmds = ['']
-        cmds.append(dset_name + ' = ' + dset_name + '.drop_duplicates(subset = [' + str_selCols + '])')
+        cmds.append('# Drop duplicates')        
+        cmds.append(dset_name + ' = ' + dset_name + '.drop_duplicates(subset = [' + str_selVars + '])')
         cmds.append(dset_name + '.head()')
         cmds.append('')
         self.cmds.add_cmds(cmds)
@@ -197,16 +198,16 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
     def OnSelColBtnClicked(self): 
         
         ## Get selected column names
-        selCols = self.ui.comboBoxSelVar.listCheckedItems()
-        str_selCols = ','.join('"{0}"'.format(x) for x in selCols)
+        selVars = self.ui.comboBoxSelVar.listCheckedItems()
+        str_selVars = ','.join('"{0}"'.format(x) for x in selVars)
 
         ## Select columns from dataset
         dtmp = self.data_model_arr.datasets[self.active_index].data      ## FIXME
-        dtmp = dtmp[selCols]
+        dtmp = dtmp[selVars]
         self.data_model_arr.datasets[self.active_index].data = dtmp
         
         ## Columns changed; Update data dictionary
-        self.data_model_arr.datasets[self.active_index].UpdateDictSelCols(selCols)
+        self.data_model_arr.datasets[self.active_index].UpdateDictSelCols(selVars)
 
         ## Show data table
         self.dataView = QtWidgets.QTableView()
@@ -231,7 +232,8 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         ## Populate commands that will be written in a notebook
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
         cmds = ['']
-        cmds.append(dset_name + ' = ' + dset_name + '[[' + str_selCols + ']]')
+        cmds.append('# Select columns')                
+        cmds.append(dset_name + ' = ' + dset_name + '[[' + str_selVars + ']]')
         cmds.append(dset_name + '.head()')
         cmds.append('')
         self.cmds.add_cmds(cmds)
@@ -348,6 +350,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         ##-------
         ## Populate commands that will be written in a notebook
         cmds = ['']
+        cmds.append('# Filter dataset')        
         if self.filter_column_type == 'NUM':
             filterTxt = '[(' + dset_name + '["' + fvar + '"] >= ' + str(vmin) + ') & (' + \
                         dset_name + '["' + fvar + '"] <= ' + str(vmax) + ')]'

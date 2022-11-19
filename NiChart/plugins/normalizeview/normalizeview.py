@@ -185,7 +185,7 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         self.data_model_arr.AddDataDict(dfDict)
         
     ## Normalize data by the given variable
-    def NormalizeData(self, df, selVars, normVar, outSuff='_NORM'):
+    def NormalizeData(self, df, selVars, normVar, outSuff):
         dfNorm = 100 * df[selVars].div(df[normVar], axis=0)
         dfNorm = dfNorm.add_suffix('_' + outSuff)
         newVars = dfNorm.columns.tolist()
@@ -198,15 +198,17 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
         normVar = self.ui.comboBoxDivideByVar.currentText()
+        str_normVar = ','.join('"{0}"'.format(x) for x in [normVar])
+        
         selVars = self.ui.comboBoxSelVar.listCheckedItems()
-
+        str_selVars = ','.join('"{0}"'.format(x) for x in selVars)
+        
         outSuff = self.ui.edit_outSuff.text()
+        if outSuff[0] == '_':
+            outSuff = 'NORM'
         if outSuff[0] == '_':
             outSuff = outSuff[1:]
         outCat = outSuff
-
-        #logger.info(normVar)
-        #logger.info(selVars)
 
         # Get active dset, apply normalization
         dfCurr = self.data_model_arr.datasets[self.active_index].data
@@ -235,11 +237,16 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         sub.show()
         self.mdi.tileSubWindows()
 
-        ###-------      FIXME    add commands for normalization
-        ### Populate commands that will be written in a notebook
-        #cmds = ['']
-        #cmds.append('')
-        #self.cmds.add_cmds(cmds)
-        ###-------
+        ##-------
+        ## Populate commands that will be written in a notebook
+        cmds = ['']
+        cmds.append('Normalize dataset')
+        cmds.append('dfNorm = 100 * ' + dset_name + '[' + str_selVars + '].div(' + dset_name + '["' + normVar + '"], axis=0)')
+        cmds.append('dfNorm = dfNorm.add_suffix("_" + outSuff)')
+        cmds.append(dset_name + ' = pd.concat([' + dset_name + ', dfNorm], axis=1)')
+        cmds.append(dset_name + '.head()')
+        cmds.append('')        
+        self.cmds.add_cmds(cmds)
+        ##-------
    
     

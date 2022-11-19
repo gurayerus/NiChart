@@ -4,7 +4,7 @@ contact: software@cbica.upenn.edu
 Copyright (c) 2018 University of Pennsylvania. All rights reserved.
 Use of this source code is governed by license located in license file: https://github.com/CBICA/NiChart/blob/main/LICENSE
 """
-
+import time
 import pandas as pd
 import numpy as np
 import importlib.resources as pkg_resources
@@ -28,9 +28,13 @@ class CmdModel(QObject):
         self.add_hdr_cmds()
 
     def add_hdr_cmds(self):
+        
+        currTime = time.strftime('%l:%M%p %Z on %b %d, %Y')
+        
         self.cmds.append('## NiChart Notebook')
         self.cmds.append('#### Generated automatically by NiChart')
-        self.cmds.append('')
+        self.cmds.append('#### Generated automatically by NiChart')        
+        self.cmds.append('     ' + currTime)
         self.cmds.append('#### Import statements')
         self.cmds.append('')
         self.cmds.append('import pandas as pd')
@@ -70,13 +74,13 @@ class CmdModel(QObject):
         for i, tmpcmd in enumerate(self.cmds):
             print('Cmd ' + str(i) + ' : ' + self.cmds[i])
 
-    ## Function to write commands as a regular file (FIXME: this is tmp for now)
-    def cmds_to_file(self, fname):
-        with open(fname, mode='w') as fout:
-            logger.info('Writing file ' + fname)
-            fout.write('Commands:')
-            fout.write('\n'.join(self.cmds))
-            logger.info(self.cmds)        
+    ### Function to write commands as a regular file (FIXME: this is tmp for now)
+    #def cmds_to_file(self, fname):
+        #with open(fname, mode='w') as fout:
+            #logger.info('Writing file ' + fname)
+            #fout.write('Commands:')
+            #fout.write('\n'.join(self.cmds))
+            #logger.info(self.cmds)        
         
     ## Function to write commands as a notebook
     def cmds_to_notebook(self, fname):
@@ -135,7 +139,7 @@ class CmdModel(QObject):
                 
                 else:
                     cell.append("{}".format(tmp_cmd + '\n'))
-                    if tmp_cmd.startswith('#'):
+                    if tmp_cmd.startswith('##'):
                         cmd_type = 'mark'
                     else:
                         cmd_type = 'code'

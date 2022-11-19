@@ -24,9 +24,14 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         ## Initialized by the mainwindow during loading of plugin
         self.data_model_arr = None
 
+        ## Status bar of the main window
+        ## Initialized by the mainwindow during loading of plugin
+        self.statusbar = None
+
         ## Array that keeps all commands (used in notebook creation)
         self.cmds = None
         
+
         ## Index of curr dataset
         self.active_index = -1
 
@@ -76,7 +81,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
     def SetupConnections(self):
         self.data_model_arr.active_dset_changed.connect(self.OnDataChanged)
 
-        self.ui.showTableBtn.clicked.connect(self.OnShowTableBtnClicked)
+        self.ui.showTableBtn.clicked.connect(self.OnShowDataBtnClicked)
         self.ui.showDictBtn.clicked.connect(self.OnShowDictBtnClicked)
         self.ui.comboBoxDsets.currentIndexChanged.connect(self.OnDataSelectionChanged)
         self.ui.comboBoxSortCat1.currentIndexChanged.connect(self.OnSortCat1Changed)
@@ -92,8 +97,11 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+        
+        self.statusbar.showMessage('Displaying data dictionary')
+        
 
-    def OnShowTableBtnClicked(self):
+    def OnShowDataBtnClicked(self):
         currDset = self.ui.comboBoxDsets.currentText()
         
         ##-------
@@ -122,7 +130,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
 
             # Variables required for preparing the notebook command
             str_sortCols = ','.join('"{0}"'.format(x) for x in sortCols)
-            str_sortOrders = ','.join('"{0}"'.format(x) for x in sortOrders)
+            str_sortOrders = ','.join('{0}'.format(x) for x in sortOrders)
 
             logger.info('Sorting data by : ' + str_sortCols)
 
@@ -142,10 +150,13 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+
+        self.statusbar.showMessage('Displaying dataset')
         
         ##-------
         ## Populate commands that will be written in a notebook
         cmds = ['']
+        cmds.append('# Show dataset')
         if len(sortCols)>0:
             cmds.append(dset_name + ' = ' + dset_name + '.sort_values([' + 
                              str_sortCols  + '], ascending = [' + str_sortOrders + '])')
@@ -189,6 +200,8 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         tmpData = self.data_model_arr.datasets[self.active_index]
         selVars = tmpData.data_cat_map.loc[[selCat]].VarName.tolist()
         self.PopulateComboBox(self.ui.comboBoxSortVar1, selVars)
+        
+        self.statusbar.showMessage('User selected data category: ' + selCat)        
 
     def OnSortCat2Changed(self):
 
@@ -198,6 +211,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         selVars = tmpData.data_cat_map.loc[[selCat]].VarName.tolist()
         self.PopulateComboBox(self.ui.comboBoxSortVar2, selVars)
 
+        self.statusbar.showMessage('User selected data category: ' + selCat)        
 
     def OnDataChanged(self):
         
@@ -215,11 +229,11 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         if len(self.data_model_arr.datasets) == 0:
             self.ui.wActiveDset.hide()
             self.ui.wSorting.hide()
-            self.ui.wShowTable.hide()
+            self.ui.wShowData.hide()
         else:
             self.ui.wActiveDset.show()
             self.ui.wSorting.show()
-            self.ui.wShowTable.show()
+            self.ui.wShowData.show()
 
         ## Set fields for various options
         self.active_index = self.data_model_arr.active_index
@@ -276,4 +290,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.data_model_arr.active_index = self.active_index
         
         self.data_model_arr.OnDataChanged()
+
+        self.statusbar.showMessage('Selected new dataset: ' + selDsetName)
+        
         

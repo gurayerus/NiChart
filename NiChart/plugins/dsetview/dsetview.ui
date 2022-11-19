@@ -421,7 +421,7 @@
                         </item>              
 
                         <item>
-                            <widget  class="QFrame"  name="wShowTable">
+                            <widget  class="QFrame"  name="wShowData">
                             <property  name="frameShape">
                                 <enum>QFrame::StyledPanel</enum>
                             </property>
@@ -448,7 +448,7 @@
                                 <item>
                                     <widget  class="QPushButton"  name="showTableBtn">
                                     <property  name="text">
-                                        <string>Show Table</string>
+                                        <string>Show Dataset</string>
                                     </property>
                                     </widget>
                                 </item>
@@ -484,7 +484,7 @@
                                 <item>
                                     <widget  class="QPushButton"  name="showDictBtn">
                                     <property  name="text">
-                                        <string>Show Dict</string>
+                                        <string>Show Dictionary</string>
                                     </property>
                                     </widget>
                                 </item>

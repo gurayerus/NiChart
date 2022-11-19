@@ -134,22 +134,27 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
-        self.mdi.addSubWindow(sub)        
+        self.mdi.addSubWindow(sub)
         sub.show()
         self.mdi.tileSubWindows()
 
-        ###-------      FIXME    add commands for normalization
-        ### Populate commands that will be written in a notebook
-        #cmds = ['']
-        #cmds.append('')
-        #self.cmds.add_cmds(cmds)
-        ###-------
+        ## Populate commands that will be written in a notebook
+        str_mergeOn1 = ','.join('"{0}"'.format(x) for x in mergeOn1)
+        str_mergeOn2 = ','.join('"{0}"'.format(x) for x in mergeOn2)
 
-        #str_mergeOn1 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeOn1)
-        #str_mergeOn2 = str_filterVarVals = ','.join('"{0}"'.format(x) for x in mergeOn2)
-        #plot_cmds.append(dset_name + ' = ' + dset_name + '.merge(' + dset_name2 + 
-                         #', right_on = [' + str_mergeOn1 +'], left_on = [' + str_mergeOn2 + '])')
-        #plot_cmds.append(dset_name + '.head()')
+        cmds = ['']
+        cmds.append(dset_name + ' = ' + dset_name + '.merge(' + dset_name2 + 
+                    ', left_on = [' + str_mergeOn1 +'], right_on = [' + str_mergeOn2 + 
+                    '], suffixes=["","_DUPLVARINDF2"])')
+        
+        cmds.append('## Note: Lines added to drop duplicate columns in dset2')
+        cmds.append('colsKeep = ' + dset_name + '.columns[' + dset_name +
+                    '.columns.str.contains("_DUPLVARINDF2")==False]')
+        cmds.append(dset_name + ' = ' + dset_name + '[colsKeep]')
+        cmds.append(dset_name + '.head()')
+        cmds.append('')
+        self.cmds.add_cmds(cmds)
+        ##-------
         
 
     def PopulateTable(self, data):
