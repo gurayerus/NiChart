@@ -66,7 +66,10 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.ui.wOptions.setMaximumWidth(300)
         
         self.ui.edit_fname.setReadOnly(True)
+        self.ui.edit_fname.setStyleSheet("border: 0px; background-color: rgb(235, 235, 245)")
+
         self.ui.edit_dshape.setReadOnly(True)
+        self.ui.edit_dshape.setStyleSheet("border: 0px; background-color: rgb(235, 235, 245)")
         
         self.ui.wOptions.hide()
     

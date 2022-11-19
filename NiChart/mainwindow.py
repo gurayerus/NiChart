@@ -82,9 +82,6 @@ class MainWindow(QtWidgets.QMainWindow):
         logger.info("Loaded Plugins: %s", self.Plugins.keys())
         logger.info(self.IndexPlugins)
 
-        logger.info('******************************************************************')
-        logger.info(self.Plugins['Dataset View'])
-
         # Create new menu action for each plugin
         for i, key in enumerate(self.Plugins.keys()):
             newAction = QAction(key, self)        

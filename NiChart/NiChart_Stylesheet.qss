@@ -4,16 +4,16 @@ QWidget{
 }
 
 QComboBox{
-    background-color: rgb(240, 240, 200);
-    color: rgba(30, 30, 0, 200)
+    background-color: rgb(255, 255, 255);
+    color: rgba(0, 0, 0, 200)
 }
 SearchableQComboBox{
-    background-color: rgb(240, 240, 200);
-    color: rgba(60, 60, 0, 200)
+    background-color: rgb(255, 255, 255);
+    color: rgba(0, 0, 0, 200)
 }
 CheckableQComboBox{
-    background-color: rgb(240, 240, 200);
-    color: rgba(30, 30, 0, 200)
+    background-color: rgb(255, 255, 255);
+    color: rgba(0, 0, 0, 200)
 }
 QLineEdit{
     background-color: rgb(255, 255, 255);

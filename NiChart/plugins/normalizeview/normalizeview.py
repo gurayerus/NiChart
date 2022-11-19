@@ -187,7 +187,7 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
     ## Normalize data by the given variable
     def NormalizeData(self, df, selVars, normVar, outSuff='_NORM'):
         dfNorm = 100 * df[selVars].div(df[normVar], axis=0)
-        dfNorm = dfNorm.add_suffix(outSuff)
+        dfNorm = dfNorm.add_suffix('_' + outSuff)
         newVars = dfNorm.columns.tolist()
         dfOut = pd.concat([df, dfNorm], axis=1)        
         return dfOut, newVars
@@ -201,7 +201,9 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         selVars = self.ui.comboBoxSelVar.listCheckedItems()
 
         outSuff = self.ui.edit_outSuff.text()
-        outCat = self.ui.edit_outCat.text()
+        if outSuff[0] == '_':
+            outSuff = outSuff[1:]
+        outCat = outSuff
 
         #logger.info(normVar)
         #logger.info(selVars)
