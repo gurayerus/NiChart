@@ -24,6 +24,7 @@ logger = iStagingLogger.get_logger(__name__)
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    
     def __init__(self, dataFiles = None, dictFiles = None):
         super(MainWindow,self).__init__()
 
