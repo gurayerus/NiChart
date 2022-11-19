@@ -65,6 +65,9 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         
         self.ui.wOptions.setMaximumWidth(300)
         
+        self.ui.edit_fname.setReadOnly(True)
+        self.ui.edit_dshape.setReadOnly(True)
+        
         self.ui.wOptions.hide()
     
     def SetupConnections(self):

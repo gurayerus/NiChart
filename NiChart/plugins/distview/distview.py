@@ -75,10 +75,9 @@ class DistView(QtWidgets.QWidget,BasePlugin):
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
 
-        #self.ui.helpBtn.setGeometry(0, 0, 50, 50)
-        #self.ui.helpBtn.setStyleSheet("background-color : rgb(140, 30, 50)")
-
         self.ui.wOptions.setMaximumWidth(300)
+
+        self.ui.edit_activeDset.setReadOnly(True)       
 
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
@@ -96,7 +95,6 @@ class DistView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboHueCat.currentIndexChanged.connect(self.OnHueCatChanged)
 
         self.ui.plotBtn.clicked.connect(lambda: self.OnPlotBtnClicked())
-        self.ui.helpBtn.clicked.connect(lambda: self.OnHelpBtnClicked())
 
     def OnXCatChanged(self):
         selCat = self.ui.comboXCat.currentText()
@@ -142,13 +140,6 @@ class DistView(QtWidgets.QWidget,BasePlugin):
             self.PopulateComboBox(self.ui.comboHueVal, selHueVals)
         else:
             print('Too many unique values for selection, skip : ' + str(len(selHueVals)))
-
-    def OnHelpBtnClicked(self):
-        msg = QMessageBox()
-        msg.setWindowTitle('Dist View Usage info:')
-        msg.setText('Hello ... ')
-        x = msg.exec_()
-
 
     def OnPlotBtnClicked(self):
 
@@ -199,7 +190,7 @@ class DistView(QtWidgets.QWidget,BasePlugin):
             logger.info(catNames)
             
             ## Set active dset name
-            self.ui.edit_dset1.setText(self.data_model_arr.dataset_names[self.active_index])
+            self.ui.edit_activeDset.setText(self.data_model_arr.dataset_names[self.active_index])
 
             ## Update selection, sorting and drop duplicates panels
             self.UpdatePanels(catNames, colNames)

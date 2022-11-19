@@ -66,6 +66,7 @@
                         <property  name="lineWidth">
                             <number>8</number>
                         </property>
+
                         <layout  class="QVBoxLayout"  name="vlActiveDset">
                             
                             <item>
@@ -77,13 +78,35 @@
                             </item>
 
                             <item>
-                                <widget  class="QLineEdit"  name="edit_dset1">
-                                    <property  name="text">
-                                    <string> </string>
+                            <layout  class="QHBoxLayout"  name="horizontalLayout_5">
+                                <item>
+                                <spacer  name="horizontalSpacer_5">
+                                    <property  name="orientation">
+                                    <enum>Qt::Horizontal</enum>
                                     </property>
-                                </widget>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
+                                    <property  name="sizeHint"  stdset="0">
+                                    <size>
+                                        <width>30</width>
+                                        <height>20</height>
+                                    </size>
+                                    </property>
+                                </spacer>
+                                </item>
+                                <item>
+                                    <widget  class="QLineEdit"  name="edit_activeDset">
+                                        <property  name="text">
+                                        <string> </string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
                             </item>
-
+                            
                         </layout>
                         </widget>
                     </item>
@@ -115,9 +138,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -161,9 +189,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -207,9 +240,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -228,9 +266,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -275,9 +318,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -296,9 +344,14 @@
                                     <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                     </property>
+                                    
+                                    <property name="sizeType">
+                                        <enum>QSizePolicy::Fixed</enum>
+                                    </property>
+                                    
                                     <property  name="sizeHint"  stdset="0">
                                     <size>
-                                        <width>40</width>
+                                        <width>30</width>
                                         <height>20</height>
                                     </size>
                                     </property>
@@ -331,6 +384,7 @@
                                 <property  name="orientation">
                                     <enum>Qt::Horizontal</enum>
                                 </property>
+                                
                                 <property  name="sizeHint"  stdset="0">
                                     <size>
                                     <width>40</width>

@@ -57,7 +57,8 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
 
         self.ui.wOptions.setMaximumWidth(300)
         
-        
+        self.ui.edit_activeDset.setReadOnly(True)
+
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
 
@@ -196,7 +197,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
             catNames = dataset.data_cat_map.index.unique().tolist()
 
             ## Set active dset name
-            self.ui.edit_dset1.setText(dsetName)
+            self.ui.edit_activeDset.setText(dsetName)
 
             ## Update Merge Vars for dset1 and dset2
             self.PopulateComboBox(self.ui.comboBoxMergeVar1, colNames, '--var name--')

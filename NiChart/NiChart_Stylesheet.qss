@@ -16,8 +16,8 @@ CheckableQComboBox{
     color: rgba(30, 30, 0, 200)
 }
 QLineEdit{
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-size: 13px
 }
 QLabel{

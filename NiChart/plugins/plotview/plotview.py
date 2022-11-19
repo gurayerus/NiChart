@@ -68,6 +68,8 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboFilterVal.setEditable(False)
         self.ui.hlComboFilterVal.addWidget(self.ui.comboFilterVal)
 
+        self.ui.comboFilterVal.hide()
+
         ## Panel for hue var
         self.ui.comboHueCat = QComboBox(self.ui)
         self.ui.comboHueCat.setEditable(False)
@@ -80,10 +82,14 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboHueVal = CheckableQComboBox(self.ui)
         self.ui.comboHueVal.setEditable(False)
         self.ui.hlComboHueVal.addWidget(self.ui.comboHueVal)
+
+        self.ui.comboHueVal.hide()
         
         
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
+        
+        self.ui.edit_activeDset.setReadOnly(True)               
 
         self.ui.wOptions.setMaximumWidth(300)
     
@@ -136,6 +142,8 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         
         if len(selFilterVals) < TH_NUM_UNIQ:
             self.PopulateComboBox(self.ui.comboFilterVal, selFilterVals)
+            self.ui.comboFilterVal.show()
+            
         else:
             print('Too many unique values for selection, skip : ' +  selFilter + ' ' + str(len(selFilterVals)))
 
@@ -148,6 +156,8 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         
         if len(selHueVals) < TH_NUM_UNIQ:
             self.PopulateComboBox(self.ui.comboHueVal, selHueVals)
+            self.ui.comboHueVal.show()
+            
         else:
             print('Too many unique values for selection, skip : ' + str(len(selHueVals)))
 
@@ -202,7 +212,7 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             logger.info(catNames)
             
             ## Set active dset name
-            self.ui.edit_dset1.setText(self.data_model_arr.dataset_names[self.active_index])
+            self.ui.edit_activeDset.setText(self.data_model_arr.dataset_names[self.active_index])
 
             ## Update selection, sorting and drop duplicates panels
             self.UpdatePanels(catNames, colNames)
@@ -223,10 +233,10 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             self.PopulateComboBox(self.ui.comboYCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboFilterCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboHueCat, catNames, '--var group--')
-        self.PopulateComboBox(self.ui.comboXVar, colNames)
-        self.PopulateComboBox(self.ui.comboYVar, colNames)
-        self.PopulateComboBox(self.ui.comboFilterVar, colNames)
-        self.PopulateComboBox(self.ui.comboHueVar, colNames)
+        self.PopulateComboBox(self.ui.comboXVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboYVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboFilterVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboHueVar, colNames, '--var name--')
         
     # Add the values to comboBox
     def PopulateComboBox(self, cbox, values, strPlaceholder = None, bypassCheckable=False):

@@ -81,6 +81,8 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
 
+        self.ui.edit_activeDset.setReadOnly(True)
+
         self.ui.wOptions.setMaximumWidth(300)
         
 
@@ -373,7 +375,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
             logger.info(catNames)
             
             ## Set active dset name
-            self.ui.edit_dset1.setText(self.data_model_arr.dataset_names[self.active_index])
+            self.ui.edit_activeDset.setText(self.data_model_arr.dataset_names[self.active_index])
 
             ## Update selection, sorting and drop duplicates panels
             self.UpdatePanels(catNames, colNames)

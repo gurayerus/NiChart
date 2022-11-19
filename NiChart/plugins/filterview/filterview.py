@@ -75,6 +75,8 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         
         self.ui.wOptions.setMaximumWidth(300)
         
+        self.ui.edit_activeDset.setReadOnly(True)       
+        
         ## Type of filter column (numeric or categorical)
         self.filter_column_type = None
 
@@ -283,7 +285,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
             logger.info(catNames)
             
             ## Set active dset name
-            self.ui.edit_dset1.setText(self.data_model_arr.dataset_names[self.active_index])
+            self.ui.edit_activeDset.setText(self.data_model_arr.dataset_names[self.active_index])
 
             ## Update selection, sorting and drop duplicates panels
             self.UpdatePanels(catNames, colNames)
