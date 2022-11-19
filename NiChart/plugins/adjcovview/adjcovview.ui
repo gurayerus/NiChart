@@ -161,7 +161,7 @@
 
 
                     <item>
-                        <widget  class="QFrame"  name="wCovKeep">
+                        <widget  class="QFrame"  name="wCov">
                         <property  name="frameShape">
                             <enum>QFrame::StyledPanel</enum>
                         </property>
@@ -172,7 +172,7 @@
                             <number>8</number>
                         </property>
                         
-                        <layout  class="QVBoxLayout"  name="vlCovKeep">
+                        <layout  class="QVBoxLayout"  name="vlCov">
                             <item>
                             <widget  class="QLabel"  name="label_select">
                                 <property  name="text">
@@ -205,24 +205,7 @@
                                 </item>
                             </layout>
                             </item>
-                        </layout>
-                        
-                        </widget>
-                    </item>
-                    
-                    <item>
-                        <widget  class="QFrame"  name="wCovCorr">
-                        <property  name="frameShape">
-                            <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property  name="frameShadow">
-                            <enum>QFrame::Raised</enum>
-                        </property>
-                        <property  name="lineWidth">
-                            <number>8</number>
-                        </property>
-                        
-                        <layout  class="QVBoxLayout"  name="vlCovCorr">
+
                             <item>
                             <widget  class="QLabel"  name="label_select">
                                 <property  name="text">
@@ -275,7 +258,7 @@
                             <item>
                             <widget  class="QLabel"  name="label_select2">
                                 <property  name="text">
-                                <string>Selection</string>
+                                <string>Estimation Sample</string>
                                 </property>
                             </widget>
                             </item>
@@ -323,7 +306,7 @@
                             <item>
                             <widget  class="QLabel"  name="label_select2">
                                 <property  name="text">
-                                <string>Out suffix: </string>
+                                <string>Out suffix/category: </string>
                                 </property>
                             </widget>
                             </item>
@@ -357,55 +340,6 @@
                         </widget>
                     </item>
                     
-                    <item>
-                        <widget  class="QFrame"  name="wOutCat">
-                        <property  name="frameShape">
-                            <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property  name="frameShadow">
-                            <enum>QFrame::Raised</enum>
-                        </property>
-                        <property  name="lineWidth">
-                            <number>8</number>
-                        </property>
-                        <layout  class="QVBoxLayout"  name="vlBC">
-                            <item>
-                            <widget  class="QLabel"  name="label_outcat">
-                                <property  name="text">
-                                <string>Out category: </string>
-                                </property>
-                            </widget>
-                            </item>
-                            <item>
-                            <layout  class="QHBoxLayout"  name="horizontalLayout_6">
-                                <item>
-                                <spacer  name="horizontalSpacer_6">
-                                    <property  name="orientation">
-                                    <enum>Qt::Horizontal</enum>
-                                    </property>
-                                    
-                                    <property name="sizeType">
-                                        <enum>QSizePolicy::Fixed</enum>
-                                    </property>
-                                    
-                                    <property  name="sizeHint"  stdset="0">
-                                    <size>
-                                        <width>30</width>
-                                        <height>20</height>
-                                    </size>
-                                    </property>
-                                </spacer>
-                                </item>
-                                <item>
-                                    <widget  class="QLineEdit"  name="edit_outCat">
-                                    </widget>
-                                </item>
-                            </layout>
-                            </item>
-                        </layout>
-                        </widget>
-                    </item>
-
                     <item>
                         <widget  class="QFrame"  name="wAdjust">
                         <property  name="frameShape">

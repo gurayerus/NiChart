@@ -88,6 +88,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
 
 
     def SetupConnections(self):
+        
         self.data_model_arr.active_dset_changed.connect(lambda: self.OnDataChanged())
 
         self.ui.comboBoxSelVar.currentIndexChanged.connect(lambda: self.OnSelIndexChanged())
@@ -99,85 +100,39 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
 
         self.ui.adjCovBtn.clicked.connect(lambda: self.OnAdjCovBtnClicked())
 
+    def CheckSelVars(self, selItem, comboVar):
+
+        ## Read selected cat value
+        selCat = selItem.text()
+
+        ## Get list of cat to var name mapping
+        dmap = self.data_model_arr.datasets[self.active_index].data_cat_map
+        
+        ## Check status of edit box for sel category
+        isChecked = selItem.checkState()
+        
+        ## Set/reset check mark for selected var names in combobox for variables
+        ## Update sel cat check box
+        checkedVars = dmap.loc[[selCat]].VarName.tolist()
+        
+        if selItem.checkState() == QtCore.Qt.Checked: 
+            comboVar.uncheckItems(checkedVars)      ## Selected vars are set to "checked"
+            selItem.setCheckState(QtCore.Qt.Unchecked)
+        else:
+            comboVar.checkItems(checkedVars)      ## Selected vars are set to "checked"
+            selItem.setCheckState(QtCore.Qt.Checked)
+
     def OnOutCatSelected(self, index):
-
         selItem = self.ui.comboBoxOutCat.model().itemFromIndex(index) 
+        self.CheckSelVars(selItem, self.ui.comboBoxOutVar)
         
-        ## Read selected cat value
-        selCat = selItem.text()
-
-        logger.info(selCat)
-
-        ## Get list of cat to var name mapping
-        dmap = self.data_model_arr.datasets[self.active_index].data_cat_map
-        
-        ## Check status of edit box for sel category
-        isChecked = selItem.checkState()
-        
-        ## Set/reset check mark for selected var names in combobox for variables
-        ## Update sel cat check box
-        checkedVars = dmap.loc[[selCat]].VarName.tolist()
-        
-        if selItem.checkState() == QtCore.Qt.Checked: 
-            self.ui.comboBoxOutVar.uncheckItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Unchecked)
-        else:
-            self.ui.comboBoxOutVar.checkItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Checked)
-
     def OnCovKeepCatSelected(self, index):
-
         selItem = self.ui.comboBoxCovKeepCat.model().itemFromIndex(index) 
+        self.CheckSelVars(selItem, self.ui.comboBoxCovKeepVar)
         
-        ## Read selected cat value
-        selCat = selItem.text()
-
-        ## Get list of cat to var name mapping
-        dmap = self.data_model_arr.datasets[self.active_index].data_cat_map
-        
-        ## Check status of edit box for sel category
-        isChecked = selItem.checkState()
-        
-        ## Set/reset check mark for selected var names in combobox for variables
-        ## Update sel cat check box
-        checkedVars = dmap.loc[[selCat]].VarName.tolist()
-        
-        logger.info(checkedVars)
-        
-        if selItem.checkState() == QtCore.Qt.Checked: 
-            self.ui.comboBoxCovKeepVar.uncheckItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Unchecked)
-        else:
-            self.ui.comboBoxCovKeepVar.checkItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Checked)
-        #logger.info(checkedVars)
-
     def OnCovCorrCatSelected(self, index):
-
         selItem = self.ui.comboBoxCovCorrCat.model().itemFromIndex(index) 
-        
-        ## Read selected cat value
-        selCat = selItem.text()
-
-        ## Get list of cat to var name mapping
-        dmap = self.data_model_arr.datasets[self.active_index].data_cat_map
-        
-        ## Check status of edit box for sel category
-        isChecked = selItem.checkState()
-        
-        ## Set/reset check mark for selected var names in combobox for variables
-        ## Update sel cat check box
-        checkedVars = dmap.loc[[selCat]].VarName.tolist()
-        
-        logger.info(checkedVars)
-        
-        if selItem.checkState() == QtCore.Qt.Checked: 
-            self.ui.comboBoxCovCorrVar.uncheckItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Unchecked)
-        else:
-            self.ui.comboBoxCovCorrVar.checkItems(checkedVars)      ## Selected vars are set to "checked"
-            selItem.setCheckState(QtCore.Qt.Checked)
-        #logger.info(checkedVars)
+        self.CheckSelVars(selItem, self.ui.comboBoxCovCorrVar)
 
     def OnSelCatChanged(self):
         selCat = self.ui.comboBoxSelCat.currentText()
@@ -385,21 +340,22 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         if len(catNames) == 1:      ## Single variable category, no need for category combobox
             self.ui.comboBoxOutCat.hide()
             self.ui.comboBoxCovKeepCat.hide()
-            self.ui.comboBoxCovKeepCat.hide()
+            self.ui.comboBoxCovCorrCat.hide()
             self.ui.comboBoxSelCat.hide()
         else:
             self.ui.comboBoxOutCat.show()
             self.ui.comboBoxCovKeepCat.show()
-            self.ui.comboBoxCovKeepCat.show()
+            self.ui.comboBoxCovCorrCat.show()
             self.ui.comboBoxSelCat.show()
             self.PopulateComboBox(self.ui.comboBoxOutCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboBoxCovKeepCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboBoxCovCorrCat, catNames, '--var group--')
             self.PopulateComboBox(self.ui.comboBoxSelCat, catNames, '--var group--')
-        self.PopulateComboBox(self.ui.comboBoxOutVar, colNames)
-        self.PopulateComboBox(self.ui.comboBoxCovKeepVar, colNames)
-        self.PopulateComboBox(self.ui.comboBoxCovCorrVar, colNames)
-        self.PopulateComboBox(self.ui.comboBoxSelVar, colNames)
+        self.PopulateComboBox(self.ui.comboBoxOutVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboBoxCovKeepVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboBoxCovCorrVar, colNames, '--var name--')
+        self.PopulateComboBox(self.ui.comboBoxSelVar, colNames, '--var name--')
 
+        self.ui.comboBoxSelVal.hide()
 
 
