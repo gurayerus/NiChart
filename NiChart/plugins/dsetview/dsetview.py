@@ -12,6 +12,8 @@ from NiChart.core.gui.CheckableQComboBox import CheckableQComboBox
 from NiChart.core.plotcanvas import PlotCanvas
 from NiChart.core.model.datamodel import PandasModel
 
+import inspect
+
 logger = iStagingLogger.get_logger(__name__)
 
 class DsetView(QtWidgets.QWidget,BasePlugin):
@@ -102,6 +104,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         
 
     def OnShowDataBtnClicked(self):
+
         currDset = self.ui.comboBoxDsets.currentText()
         
         ##-------

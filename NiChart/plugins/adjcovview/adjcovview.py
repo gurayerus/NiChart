@@ -17,6 +17,7 @@ import pandas as pd
 from matplotlib.cm import get_cmap
 from matplotlib.lines import Line2D
 import statsmodels.formula.api as sm
+import inspect
 
 logger = iStagingLogger.get_logger(__name__)
 
@@ -146,6 +147,8 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     ## The user can indicate covariates that will be corrected and not
     def AdjCov(self, df, outVars, covCorrVars, covKeepVars=None, selCol=None, selVals=None, outSuff='_COVADJ'):
         
+        cmds = ['']
+        
         dfInit = df.copy()
         
         ## Combine covariates (to keep + to correct)
@@ -218,7 +221,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
         ## Read data
-        dtmp = self.data_model_arr.datasets[self.active_index].data
+        df = self.data_model_arr.datasets[self.active_index].data
         
         ## Read user selections for correction
         outVars = self.ui.comboBoxOutVar.listCheckedItems()
@@ -231,25 +234,30 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         logger.info(outVars)
         
         ## Correct data    
-        dcorr = self.AdjCov(dtmp, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
+        dfcorr, cmdscorr = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
 
         ## Update data
         self.data_model_arr.datasets[self.active_index].data = dcorr
 
-        #self.dataView = QtWidgets.QTableView()
-        #plot_cmds = self.PopulateTable()
+        self.dataView = QtWidgets.QTableView()
+        plot_cmds = self.PopulateTable()
         
+        sub = QMdiSubWindow()
+        sub.setWidget(self.dataView)
+        
+        self.mdi.addSubWindow(sub)        
+        sub.show()
+        self.mdi.tileSubWindows()
+
+        #fCode = inspect.getsource(AdjCov)
+        #logger.info('***************************************')
+        #logger.info(fCode)
+
         #self.cmds.add_cmd('')
         #self.cmds.add_cmds(plot_cmds)
         #self.cmds.add_cmd('')
 
 
-        #sub = QMdiSubWindow()
-        #sub.setWidget(self.dataView)
-        
-        #self.mdi.addSubWindow(sub)        
-        #sub.show()
-        #self.mdi.tileSubWindows()
 
     def PopulateSelect(self):
 
@@ -306,6 +314,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         selColVals = self.data_model_arr.datasets[self.active_index].data[selCol].unique()
         
         if len(selColVals) < TH_NUM_UNIQ:
+            self.ui.comboBoxSelVal.show()
             self.PopulateComboBox(self.ui.comboBoxSelVal, selColVals)
         else:
             print('Too many unique values for selection, skip : ' + str(len(selColVals)))

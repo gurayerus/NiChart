@@ -240,8 +240,9 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         ##-------
         ## Populate commands that will be written in a notebook
         cmds = ['']
-        cmds.append('Normalize dataset')
-        cmds.append('dfNorm = 100 * ' + dset_name + '[' + str_selVars + '].div(' + dset_name + '["' + normVar + '"], axis=0)')
+        cmds.append('# Normalize dataset')
+        cmds.append('dfNorm = 100 * ' + dset_name + '[[' + str_selVars + ']].div(' + dset_name + '["' + normVar + '"], axis=0)')
+        cmds.append('outSuff = "' + outSuff + '"')
         cmds.append('dfNorm = dfNorm.add_suffix("_" + outSuff)')
         cmds.append(dset_name + ' = pd.concat([' + dset_name + ', dfNorm], axis=1)')
         cmds.append(dset_name + '.head()')
