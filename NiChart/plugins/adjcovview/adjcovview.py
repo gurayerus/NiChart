@@ -245,12 +245,14 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         ##-------
         ## Populate commands that will be written in a notebook
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
+
+        ## Add code for function to adjust covars
+        fCode = inspect.getsource(self.AdjCov).replace('(self,','(')
+        self.cmds.add_funcdef(['', fCode, ''])
+
+        ## Add code to call the function
         cmds = ['']
         cmds.append('# Adj covariates')
-        cmds.append('')
-        fCode = inspect.getsource(self.AdjCov)
-        cmds.append(fCode)
-        cmds.append('')
 
         str_outVars = '[' + ','.join('"{0}"'.format(x) for x in outVars) + ']'
         cmds.append('outVars = ' + str_outVars)
@@ -271,7 +273,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = AdjCov(' + dset_name + ', outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)')
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def PopulateTable(self, data):
