@@ -33,7 +33,6 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         ## Array that keeps all commands (used in notebook creation)
         self.cmds = None
         
-
         ## Index of curr dataset
         self.active_index = -1
 
@@ -103,12 +102,17 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         self.statusbar.showMessage('Displaying data dictionary')
         
 
+    def sortData(self, df, sortCols, sortOrders):
+        if len(sortCols)>0:
+            dfSort = df.sort_values(sortCols, ascending=sortOrders)
+            return dfSort
+        else:
+            return df
+
     def OnShowDataBtnClicked(self):
 
-        currDset = self.ui.comboBoxDsets.currentText()
-        
-        ##-------
-        ## Set data sorting order
+        ## Read data and user selection
+        df = self.data_model_arr.datasets[self.active_index].data
         sortCols = []
         sortOrders = []
         if self.ui.check_sort1.isChecked():
@@ -123,28 +127,20 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
                 sortOrders.append(True)
             else:
                 sortOrders.append(False)
-        ##-------
 
-        # Variables required for preparing the notebook command
-        dset_name = self.data_model_arr.dataset_names[self.active_index]       
+        ## Sort data
+        dfSort = self.sortData(df, sortCols, sortOrders)
 
-        ## Apply the sorting
-        if len(sortCols)>0:
-
-            # Variables required for preparing the notebook command
-            str_sortCols = ','.join('"{0}"'.format(x) for x in sortCols)
-            str_sortOrders = ','.join('{0}'.format(x) for x in sortOrders)
-
-            logger.info('Sorting data by : ' + str_sortCols)
-
-            # Get active dset, apply sort, reassign it
-            dtmp = self.data_model_arr.datasets[self.active_index].data
-            dtmp = dtmp.sort_values(sortCols, ascending=sortOrders)
-            self.data_model_arr.datasets[self.active_index].data = dtmp
+        ## Update data
+        self.data_model_arr.datasets[self.active_index].data = dfSort
             
-        ## Load data to data view (reduce data size to make the app run faster)
+        ## Load data to data view 
+        self.dataView = QtWidgets.QTableView()
+        
+        ## Reduce data size to make the app run faster
         tmpData = self.data_model_arr.datasets[self.active_index].data
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+
         self.PopulateTable(tmpData)
 
         ## Set data view to mdi widget
@@ -154,15 +150,29 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         sub.show()
         self.mdi.tileSubWindows()
 
+        ## Display status
         self.statusbar.showMessage('Displaying dataset')
         
         ##-------
         ## Populate commands that will be written in a notebook
+        dset_name = self.data_model_arr.dataset_names[self.active_index]       
+
+        ## Add sort function definiton to notebook
+        fCode = inspect.getsource(self.sortData).replace('(self, ','(')
+        self.cmds.add_funcdef('SortData', ['', fCode, ''])
+
+        ## Add cmds to call the function
         cmds = ['']
         cmds.append('# Show dataset')
-        if len(sortCols)>0:
-            cmds.append(dset_name + ' = ' + dset_name + '.sort_values([' + 
-                             str_sortCols  + '], ascending = [' + str_sortOrders + '])')
+
+        str_sortCols = '[' +  ','.join('"{0}"'.format(x) for x in sortCols) + ']'
+        cmds.append('sortCols = ' + str_sortCols)
+
+        str_sortOrders = '[' +  ','.join('{0}'.format(x) for x in sortOrders) + ']'
+        cmds.append('sortOrders = ' + str_sortOrders)
+
+        cmds.append(dset_name + ' = sortData(' + dset_name + ', ' + str_sortCols + ', ' + str_sortOrders + ')')
+
         cmds.append(dset_name + '.head()')
         cmds.append('')
         self.cmds.add_cmd(cmds)

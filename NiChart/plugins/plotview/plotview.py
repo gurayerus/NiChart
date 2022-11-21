@@ -17,6 +17,8 @@ import pandas as pd
 from matplotlib.cm import get_cmap
 from matplotlib.lines import Line2D
 
+import inspect
+
 logger = iStagingLogger.get_logger(__name__)
 
 class PlotView(QtWidgets.QWidget,BasePlugin):
@@ -175,16 +177,17 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
 
 
-    def PlotData(self, df, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
+    def PlotData(self, axes, df, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
 
         ## Get data
         colSel = [xVar, yVar]
         if len(filterVals)>0:
-            colSel.append([filterVar])
+            colSel.append(filterVar)
         if len(hueVals)>0:
-            colSel.append([hueVar])
+            colSel.append(hueVar)
         ## Remove duplicates in selected vars
         colSel = [*set(colSel)]
+        
         dtmp = df[colSel]
         
         ## Filter data
@@ -196,24 +199,22 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             dtmp = dtmp[dtmp[hueVar].isin(hueVals)]
 
         # seaborn plot on axis
-        #a = sns.scatterplot(x=xVar, y=yVar, hue=hueVar, ax=self.plotCanvas.axes, s=5, data=dtmp)
+        #a = sns.scatterplot(x=xVar, y=yVar, hue=hueVar, ax=axes, s=5, data=dtmp)
         
         if len(hueVals)>0:
-            a,b = self.hue_regplot(dtmp, xVar, yVar, hueVar, ax=self.plotCanvas.axes)
-            self.plotCanvas.axes.legend(handles=b)
+            a,b = self.hue_regplot(dtmp, xVar, yVar, hueVar, ax=axes)
+            axes.legend(handles=b)
             
         else:
-            sns.regplot(data = dtmp, x = xVar, y = yVar, ax = self.plotCanvas.axes)
+            sns.regplot(data = dtmp, x = xVar, y = yVar, ax=axes)
             
-        self.plotCanvas.axes.yaxis.set_ticks_position('left')
-        self.plotCanvas.axes.xaxis.set_ticks_position('bottom')
-        sns.despine(fig=self.plotCanvas.axes.get_figure(), trim=True)
-        self.plotCanvas.axes.get_figure().set_tight_layout(True)
-        self.plotCanvas.axes.set(xlabel=xVar)
-        self.plotCanvas.axes.set(ylabel=yVar)
+        axes.yaxis.set_ticks_position('left')
+        axes.xaxis.set_ticks_position('bottom')
+        sns.despine(fig=axes.get_figure(), trim=True)
+        axes.get_figure().set_tight_layout(True)
+        axes.set(xlabel=xVar)
+        axes.set(ylabel=yVar)
 
-        # refresh canvas
-        self.plotCanvas.draw()
 
     def OnPlotBtnClicked(self):
 
@@ -235,7 +236,6 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             hueVar = ''
         
         ## Plot data    
-
         self.plotCanvas = PlotCanvas(self.ui)
         self.plotCanvas.axes = self.plotCanvas.fig.add_subplot(111)
 
@@ -243,52 +243,48 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         sub.setWidget(self.plotCanvas)
         self.mdi.addSubWindow(sub)        
         
-        self.PlotData(df, xVar, yVar, filterVar, filterVals, hueVar, hueVals)
-        sub.show()
-        self.mdi.tileSubWindows()
+        self.PlotData(self.plotCanvas.axes, df, xVar, yVar, filterVar, filterVals, hueVar, hueVals)
+        self.plotCanvas.draw()
         
-        ###-------
-        ### Populate commands that will be written in a notebook
-        #cmds = ['']
-        #cmds.append('')
-        #cmds = cmds + plot_cmds
-        #cmds.append('')        
-        #self.cmds.add_cmd(cmds)
-        ###-------
-
-
-
-
-
-
-    def OnPlotBtnClicked2(self):
-        
-        xVar = self.ui.comboXVar.currentText()
-        yVar = self.ui.comboYVar.currentText()
-        
-        hueVar = self.ui.comboHueVar.currentText()
-        hueVals = self.ui.comboHueVal.listCheckedItems()
-        
-        filterVar = self.ui.comboFilterVar.currentText()
-        filterVals = self.ui.comboFilterVal.listCheckedItems()
-
-        self.plotCanvas = PlotCanvas(self.ui)
-        self.plotCanvas.axes = self.plotCanvas.fig.add_subplot(111)
-
-        sub = QMdiSubWindow()
-        sub.setWidget(self.plotCanvas)
-        self.mdi.addSubWindow(sub)        
-        
-        plot_cmds = self.PlotData2(xVar, yVar, filterVar, filterVals, hueVar, hueVals)
         sub.show()
         self.mdi.tileSubWindows()
         
         ##-------
         ## Populate commands that will be written in a notebook
+        dset_name = self.data_model_arr.dataset_names[self.active_index]       
+
+        ## Add function definitons to notebook
+        fCode = inspect.getsource(self.hue_regplot).replace('(self, ','(')
+        self.cmds.add_funcdef('hue_regplot', ['', fCode, ''])
+
+        fCode = inspect.getsource(self.PlotData).replace('(self, ','(').replace('self.','').replace('ax=axes','')
+        self.cmds.add_funcdef('PlotData', ['', fCode, ''])
+
+        ## Add cmds to call the function
         cmds = ['']
+        cmds.append('# Plot data')
+
+        cmds.append('xVar = "' + xVar + '"')
+
+        cmds.append('yVar = "' + yVar + '"')
+
+        cmds.append('filterVar = "' + filterVar + '"')
+
+        str_filterVals = '[' + ','.join('"{0}"'.format(x) for x in filterVals) + ']'
+        cmds.append('filterVals = ' + str_filterVals)
+
+        cmds.append('hueVar = "' + hueVar + '"')
+
+        str_hueVals = '[' + ','.join('"{0}"'.format(x) for x in hueVals) + ']'
+        cmds.append('hueVals = ' + str_hueVals)
+
+        cmds.append('f, axes = plt.subplots(1, 1, figsize=(5, 4), dpi=100)')
+
+        cmds.append('axes = PlotData(axes, ' + dset_name + ', xVar, yVar, filterVar, filterVals, hueVar, hueVals)')
+        
+        #cmds.append('plt.show()')
+
         cmds.append('')
-        cmds = cmds + plot_cmds
-        cmds.append('')        
         self.cmds.add_cmd(cmds)
         ##-------
         
@@ -354,73 +350,3 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             cbox.setCurrentText(strPlaceholder)
         cbox.blockSignals(False)
         
-        
-                
-    def PlotData2(self, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
-
-        # We keep an array of commands for saving them in a notebook
-        plot_cmds = []
-        dset_name = self.data_model_arr.dataset_names[self.active_index]        
-        str_filterVals = ','.join('"{0}"'.format(x) for x in filterVals)
-        str_hueVals = ','.join('"{0}"'.format(x) for x in hueVals)
-
-
-        # clear plot
-        self.plotCanvas.axes.clear()
-
-        ## Get data
-        if len(filterVals)>0:
-            
-            ## Remove duplicates in selected vars
-            colSel = [*set([xVar, yVar, filterVar, hueVar])]
-            
-            
-            dtmp = self.data_model_arr.datasets[self.active_index].data[colSel]
-            str_allVars = ','.join('"{0}"'.format(x) for x in colSel)
-        else:
-            dtmp = self.data_model_arr.datasets[self.active_index].data[[xVar, yVar, hueVar]]
-            str_allVars = ','.join('"{0}"'.format(x) for x in [xVar, yVar, hueVar])
-        
-        plot_cmds.append('DTMP = ' + dset_name + '[[' + str_allVars + ']]')
-
-        ## Filter data
-        if len(filterVals)>0:
-            logger.critical(dtmp[filterVar])
-            logger.critical(dtmp.columns)
-            logger.critical(filterVar)
-            logger.critical(filterVals)
-            
-            dtmp = dtmp[dtmp[filterVar].isin(filterVals)]
-            plot_cmds.append('DTMP = DTMP[DTMP' + '["' + filterVar + '"].isin([' + str_filterVals + '])]')
-
-        ## Get hue values
-        if len(hueVals)>0:
-            dtmp = dtmp[dtmp[hueVar].isin(hueVals)]
-            plot_cmds.append('DTMP = DTMP[DTMP' + '["' + hueVar + '"].isin([' + str_hueVals + '])]')
-
-        plot_cmds.append('hue_regplot(data=DTMP, x="' + xVar + '", y="' + yVar + '", hue="' + hueVar + '")')
-
-        # seaborn plot on axis
-        #a = sns.scatterplot(x=xVar, y=yVar, hue=hueVar, ax=self.plotCanvas.axes, s=5, data=dtmp)
-        
-        logger.info(dtmp.columns)
-        logger.info(dtmp.shape)
-        
-        a,b = self.hue_regplot(dtmp, xVar, yVar, hueVar, ax=self.plotCanvas.axes)
-        self.plotCanvas.axes.legend(handles=b)
-        self.plotCanvas.axes.yaxis.set_ticks_position('left')
-        self.plotCanvas.axes.xaxis.set_ticks_position('bottom')
-        sns.despine(fig=self.plotCanvas.axes.get_figure(), trim=True)
-        self.plotCanvas.axes.get_figure().set_tight_layout(True)
-        
-        self.plotCanvas.axes.set(xlabel=xVar)
-        self.plotCanvas.axes.set(ylabel=yVar)
-
-        # refresh canvas
-        self.plotCanvas.draw()
-        
-        plot_cmds.append('plt.show()')
-
-        # Return commands for writing the notebook
-        return plot_cmds
-

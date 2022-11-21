@@ -1,8 +1,10 @@
 conda activate NiChart
 NiChart
-NiChart --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv
-NiChart --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --dict_file ~/NiChartTest/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_IMG-SHORT.csv
-NiChart --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_demographics.csv 
-NiChart --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --data_file ~/NiChartTest/TestSet_v1/MESA-AFIB/MESA-AFIB_demographics.csv --dict_file ~/NiChartTest/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_IMG-SHORT.csv --dict_file ~/NiChartTest/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_NON-IMG-SHORT.csv 
+NiChart --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv
+NiChart --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --dict_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_IMG-SHORT.csv
+NiChart --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_demographics.csv 
+NiChart --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT.csv --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_demographics.csv --dict_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_IMG-SHORT.csv --dict_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/Dictionaries/ISTAG_DataDict_v2_NON-IMG-SHORT.csv 
+
+NiChart --data_file /home/guraylab/20221117_NiChart_TestData/TestSet_v1/MESA-AFIB/MESA-AFIB_MUSE-SHORT_withDemog.csv
 
 

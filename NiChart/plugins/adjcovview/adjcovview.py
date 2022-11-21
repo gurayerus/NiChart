@@ -243,21 +243,24 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         
         self.PopulateTable(tmpData)
         
+        ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
-        
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+        
+        ## Display status
+        self.statusbar.showMessage('Displaying cov adjusted outcome variables')        
 
         ##-------
         ## Populate commands that will be written in a notebook
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
-        ## Add cmds for the adjcov function
+        ## Add adjcov function definiton to notebook
         fCode = inspect.getsource(self.AdjCov).replace('(self, ','(')
-        self.cmds.add_funcdef(['', fCode, ''])
-
+        self.cmds.add_funcdef('AdjCov', ['', fCode, ''])
+        
         ## Add cmds to call the function
         cmds = ['']
         cmds.append('# Adj covariates')

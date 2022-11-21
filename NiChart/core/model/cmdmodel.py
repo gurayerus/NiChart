@@ -30,6 +30,7 @@ class CmdModel(QObject):
         self.add_hdr()
         
         self.funcdef_cmds = ['#### Function definitions']
+        self.funcnames = []
         
         self.cmds = ['#### Main notebook']
 
@@ -42,14 +43,21 @@ class CmdModel(QObject):
         self.hdr_cmds.append('import pandas as pd')
         self.hdr_cmds.append('import numpy as np')
         self.hdr_cmds.append('import seaborn as sns')
+        self.hdr_cmds.append('import matplotlib as mpl')
         self.hdr_cmds.append('import matplotlib.pyplot as plt')
         self.hdr_cmds.append('from matplotlib.cm import get_cmap')
         self.hdr_cmds.append('from matplotlib.lines import Line2D')
         self.hdr_cmds.append('import statsmodels.formula.api as sm')
         self.hdr_cmds.append('')
     
-    def add_funcdef(self, cvalue):
-        self.funcdef_cmds = self.funcdef_cmds + cvalue
+    def add_funcdef(self, fname, cvalue):
+
+        if fname not in self.funcnames:
+            self.funcnames.append(fname)
+            self.funcdef_cmds = self.funcdef_cmds + cvalue
+        else:
+            logger.critical('SKIIII1')
+            logger.critical(self.funcnames)
 
     def add_cmd(self, cvalue):
         self.cmds = self.cmds + cvalue
