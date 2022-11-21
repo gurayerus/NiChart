@@ -17,6 +17,8 @@ import pandas as pd
 from matplotlib.cm import get_cmap
 from matplotlib.lines import Line2D
 
+import inspect
+
 logger = iStagingLogger.get_logger(__name__)
 
 class DistView(QtWidgets.QWidget,BasePlugin):
@@ -140,16 +142,120 @@ class DistView(QtWidgets.QWidget,BasePlugin):
             self.PopulateComboBox(self.ui.comboHueVal, selHueVals)
         else:
             print('Too many unique values for selection, skip : ' + str(len(selHueVals)))
+            
+    def PlotDist(self, axes, df, xVar, filterVar, filterVals, hueVar, hueVals):
+
+        # clear plot
+        axes.clear()
+
+        ## Get data
+        colSel = [xVar]
+        if len(filterVals)>0:
+            colSel.append(filterVar)
+        if len(hueVals)>0:
+            colSel.append(hueVar)
+        ## Remove duplicates in selected vars
+        colSel = [*set(colSel)]
+        
+        dtmp = df[colSel]
+        
+        ## Filter data
+        if len(filterVals)>0:
+            dtmp = dtmp[dtmp[filterVar].isin(filterVals)]
+
+        ## Get hue values
+        if len(hueVals)>0:
+            dtmp = dtmp[dtmp[hueVar].isin(hueVals)]
+
+        ## Plot distribution
+        if len(hueVals)>0:
+            sns.kdeplot(data=dtmp, x=xVar, hue=hueVar, ax=axes)
+        else:
+            sns.kdeplot(data=dtmp, x=xVar, ax=axes)
+        
+        sns.despine(fig=axes.get_figure(), trim=True)
+        axes.get_figure().set_tight_layout(True)
+        axes.set(xlabel=xVar)
 
     def OnPlotBtnClicked(self):
+
+        dset_name = self.data_model_arr.dataset_names[self.active_index]        
+
+        ## Read data
+        df = self.data_model_arr.datasets[self.active_index].data
+        
+        ## Read user selections for the plot
+        xVar = self.ui.comboXVar.currentText()
+        hueVar = self.ui.comboHueVar.currentText()
+        hueVals = self.ui.comboHueVal.listCheckedItems()
+        filterVar = self.ui.comboFilterVar.currentText()
+        filterVals = self.ui.comboFilterVal.listCheckedItems()
+        if filterVals == []:
+            filterVar = ''
+        if hueVals == []:
+            hueVar = ''
+        
+        ## Plot data    
+        self.plotCanvas = PlotCanvas(self.ui)
+        self.plotCanvas.axes = self.plotCanvas.fig.add_subplot(111)
+
+        sub = QMdiSubWindow()
+        sub.setWidget(self.plotCanvas)
+        self.mdi.addSubWindow(sub)        
+        
+        self.PlotDist(self.plotCanvas.axes, df, xVar, filterVar, filterVals, hueVar, hueVals)
+        self.plotCanvas.draw()
+        
+        sub.show()
+        self.mdi.tileSubWindows()
+
+        ##-------
+        ## Populate commands that will be written in a notebook
+        dset_name = self.data_model_arr.dataset_names[self.active_index]       
+
+        ## Add function definitons to notebook
+        fCode = inspect.getsource(self.PlotDist).replace('(self, ','(').replace('self.','').replace('ax=axes','')
+        self.cmds.add_funcdef('PlotDist', ['', fCode, ''])
+
+        ## Add cmds to call the function
+        cmds = ['']
+        cmds.append('# Plot distribution')
+
+        cmds.append('xVar = "' + xVar + '"')
+
+        cmds.append('filterVar = "' + filterVar + '"')
+
+        str_filterVals = '[' + ','.join('"{0}"'.format(x) for x in filterVals) + ']'
+        cmds.append('filterVals = ' + str_filterVals)
+
+        cmds.append('hueVar = "' + hueVar + '"')
+
+        str_hueVals = '[' + ','.join('"{0}"'.format(x) for x in hueVals) + ']'
+        cmds.append('hueVals = ' + str_hueVals)
+
+        cmds.append('f, axes = plt.subplots(1, 1, figsize=(5, 4), dpi=100)')
+
+        cmds.append('axes = PlotDist(axes, ' + dset_name + ', xVar, filterVar, filterVals, hueVar, hueVals)')
+        
+        cmds.append('')
+        self.cmds.add_cmd(cmds)
+        ##-------
+        
+    def OnPlotBtnClicked2(self):
 
         xVar = self.ui.comboXVar.currentText()
         
         hueVar = self.ui.comboHueVar.currentText()
         hueVals = self.ui.comboHueVal.listCheckedItems()
         
+        if hueVals == []:
+            hueVar = ''
+        
         filterVar = self.ui.comboFilterVar.currentText()
         filterVals = self.ui.comboFilterVal.listCheckedItems()
+
+        if filterVals == []:
+            filterVar = ''
 
         self.plotCanvas = PlotCanvas(self.ui)
         self.plotCanvas.axes = self.plotCanvas.fig.add_subplot(111)
@@ -170,7 +276,7 @@ class DistView(QtWidgets.QWidget,BasePlugin):
         cmds.append('')        
         self.cmds.add_cmd(cmds)
         ##-------
-        
+
     def OnDataChanged(self):
         
         if self.data_model_arr.active_index >= 0:
@@ -234,7 +340,10 @@ class DistView(QtWidgets.QWidget,BasePlugin):
             cbox.setCurrentText(strPlaceholder)
         cbox.blockSignals(False)
         
-    def PlotData(self, xVar, filterVar, filterVals, hueVar, hueVals):
+    def PlotData2(self, xVar, filterVar, filterVals, hueVar, hueVals):
+
+        #if filterVar == '':
+            
 
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
         str_filterVals = ','.join('"{0}"'.format(x) for x in filterVals)

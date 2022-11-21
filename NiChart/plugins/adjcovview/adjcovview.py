@@ -221,15 +221,28 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         covCorrVars = self.ui.comboBoxCovCorrVar.listCheckedItems()
         selCol = self.ui.comboBoxSelVar.currentText()
         selVals = self.ui.comboBoxSelVal.listCheckedItems()
-        outSuff = self.ui.edit_outSuff.text()
         if selVals == []:
             selCol = ''
+        outSuff = self.ui.edit_outSuff.text()
+        if outSuff == '':
+            outSuff = 'ADJCOV'
+        if outSuff[0] == '_':
+            outSuff = outSuff[1:]
+        outCat = outSuff
         
         ## Correct data    
         dfCorr, outVarNames = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
 
-        ## Update data
+        ## Set updated dset
         self.data_model_arr.datasets[self.active_index].data = dfCorr
+
+        ## Create dict with info about new columns
+        outDesc = 'Created by NiChart AdjCovView Plugin'
+        outSource = 'NiChart AdjCovView Plugin'
+        self.data_model_arr.AddNewVarsToDict(outVarNames, outCat, outDesc, outSource)
+        
+        ## Call signal for change in data
+        self.data_model_arr.OnDataChanged()        
 
         ## Load data to data view 
         self.dataView = QtWidgets.QTableView()

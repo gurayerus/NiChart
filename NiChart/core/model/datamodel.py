@@ -145,7 +145,7 @@ class DataModelArr(QObject):
         self.datasets.append(value)
         
         ## Add dataset name        
-        self.dataset_names.append('DSET_' + str(self.active_index))
+        self.dataset_names.append('DSET_' + str(self.active_index + 1))
         
         ## Apply data dictionary
         self.datasets[self.active_index].ApplyDict(self.data_dict)
@@ -181,7 +181,24 @@ class DataModelArr(QObject):
                 self.datasets[i].ApplyDict(self.data_dict)
 
         logger.info('Exit DataModelArr.AddDataDict()')
+      
+    #############################
+    ## Add new vars to the data dictionary
+    def AddNewVarsToDict(self, newVars, newCat, newDesc, newSource):
+
+        ## Create dict with info about new columns
+        dfCols = ['VarName', 'VarDesc', 'VarCat', 'SourceDict']
+        dfDict = pd.DataFrame(index = newVars, columns = dfCols)
+        dfDict.index.name = 'Var'
+        dfDict['VarName'] = newVars
+        dfDict['VarDesc'] = newDesc
+        dfDict['VarCat'] = newCat
+        dfDict['VarCat'] = dfDict.VarCat.apply(lambda x: [x])
+        dfDict['SourceDict'] = newSource
         
+        ## Update data dictionary
+        self.AddDataDict(dfDict)
+      
 
 class DataModel(QObject):
     """This class holds the data model."""

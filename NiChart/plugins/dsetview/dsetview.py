@@ -112,6 +112,8 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
     def OnShowDataBtnClicked(self):
 
         ## Read data and user selection
+        dset_name = self.data_model_arr.dataset_names[self.active_index]
+        dset_fname = self.data_model_arr.datasets[self.active_index].file_name
         df = self.data_model_arr.datasets[self.active_index].data
         sortCols = []
         sortOrders = []
@@ -146,6 +148,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
+        sub.setWindowTitle(dset_name + ': ' + os.path.basename(dset_fname))
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
@@ -155,7 +158,6 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
         
         ##-------
         ## Populate commands that will be written in a notebook
-        dset_name = self.data_model_arr.dataset_names[self.active_index]       
 
         ## Add sort function definiton to notebook
         fCode = inspect.getsource(self.sortData).replace('(self, ','(')
@@ -256,13 +258,13 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
             dataset = self.data_model_arr.datasets[self.active_index]
 
             colNames = dataset.data.columns.tolist()
-            dsetName = dataset.file_name
+            dsetFileName = dataset.file_name
             dsetShape = dataset.data.shape
             catNames = dataset.data_cat_map.index.unique().tolist()
             dataset_names = self.data_model_arr.dataset_names
 
             ## Set data info fields
-            self.ui.edit_fname.setText(os.path.basename(dsetName))
+            self.ui.edit_fname.setText(os.path.basename(dsetFileName))
             self.ui.edit_fname.setCursorPosition(0)
             
             self.ui.edit_dshape.setText(str(dsetShape))

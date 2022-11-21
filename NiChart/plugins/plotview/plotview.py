@@ -181,27 +181,28 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
         ## Get data
         colSel = [xVar, yVar]
-        if len(filterVals)>0:
+        if filterVar != '':
             colSel.append(filterVar)
-        if len(hueVals)>0:
+        if hueVar != '':
             colSel.append(hueVar)
         ## Remove duplicates in selected vars
+
+        logger.critical('EEEEEEEEEEEEEEEEEEEEEEEEe')
+        logger.critical(colSel)   
+
         colSel = [*set(colSel)]
         
+        logger.critical('EEEEEEEEEEEEEEEEEEEEEEEEe')
+        logger.critical(colSel)   
         dtmp = df[colSel]
         
         ## Filter data
-        if len(filterVals)>0:
+        if filterVar != '':
             dtmp = dtmp[dtmp[filterVar].isin(filterVals)]
 
         ## Get hue values
-        if len(hueVals)>0:
+        if hueVar != '':
             dtmp = dtmp[dtmp[hueVar].isin(hueVals)]
-
-        # seaborn plot on axis
-        #a = sns.scatterplot(x=xVar, y=yVar, hue=hueVar, ax=axes, s=5, data=dtmp)
-        
-        if len(hueVals)>0:
             a,b = self.hue_regplot(dtmp, xVar, yVar, hueVar, ax=axes)
             axes.legend(handles=b)
             
@@ -214,7 +215,6 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         axes.get_figure().set_tight_layout(True)
         axes.set(xlabel=xVar)
         axes.set(ylabel=yVar)
-
 
     def OnPlotBtnClicked(self):
 
@@ -230,9 +230,9 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         hueVals = self.ui.comboHueVal.listCheckedItems()
         filterVar = self.ui.comboFilterVar.currentText()
         filterVals = self.ui.comboFilterVal.listCheckedItems()
-        if filterVals == []:
+        if (filterVar == '--var name--') | (filterVals == []):
             filterVar = ''
-        if hueVals == []:
+        if (hueVar == '--var name--') | (hueVals == []):
             hueVar = ''
         
         ## Plot data    

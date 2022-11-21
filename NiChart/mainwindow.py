@@ -240,9 +240,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def LoadDictFile(self, filename):
         #read input data
         
-        logger.critical(filename)
-        
-        
         ## Keep initial condition for the data dict
         isDictNone = self.data_model_arr.data_dict is None
         

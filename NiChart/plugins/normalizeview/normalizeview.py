@@ -12,6 +12,8 @@ from NiChart.core.gui.CheckableQComboBox import CheckableQComboBox
 from NiChart.core.gui.NestedQMenu import NestedQMenu
 from NiChart.core.model.datamodel import PandasModel
 
+import inspect
+
 logger = iStagingLogger.get_logger(__name__)
 
 class NormalizeView(QtWidgets.QWidget,BasePlugin):
@@ -52,8 +54,6 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
 
         ## Options panel is not shown if there is no dataset loaded
         self.ui.wOptions.hide()
-        
-        self.ui.edit_activeDset.setReadOnly(True)
         
         self.ui.wOptions.setMaximumWidth(300)
         
@@ -167,86 +167,86 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         self.PopulateComboBox(self.ui.comboBoxDivideByVar, colNames, '--var name--')
         self.PopulateComboBox(self.ui.comboBoxSelVar, colNames, '--var name--')
     
-    
-    def AddNewVarsToDict(self, newVars, outCat='NormalizeView'):
-
-        ## Create dict with info about new columns
-        dfCols = ['VarName', 'VarDesc', 'VarCat', 'SourceDict']
-        dfDict = pd.DataFrame(index = newVars, columns = dfCols)
-        dfDict.index.name = 'Var'
-        dfDict['VarName'] = newVars
-        dfDict['VarDesc'] = 'Generated in NiChart NormalizeView'
-        #dfDict['VarDesc'] = dfDict.VarDesc.apply(lambda x: [x])
-        dfDict['VarCat'] = outCat
-        dfDict['VarCat'] = dfDict.VarCat.apply(lambda x: [x])
-        dfDict['SourceDict'] = 'NiChart_NormalizeView'
-        
-        ## Update data dictionary
-        self.data_model_arr.AddDataDict(dfDict)
-        
     ## Normalize data by the given variable
     def NormalizeData(self, df, selVars, normVar, outSuff):
         dfNorm = 100 * df[selVars].div(df[normVar], axis=0)
-        dfNorm = dfNorm.add_suffix('_' + outSuff)
-        newVars = dfNorm.columns.tolist()
+        dfNorm = dfNorm.add_suffix(outSuff)
+        outVarNames = dfNorm.columns.tolist()
         dfOut = pd.concat([df, dfNorm], axis=1)        
-        return dfOut, newVars
+        return dfOut, outVarNames
     
     def OnNormalizeBtnClicked(self):
         
         ## Read normalize options
-        dset_name = self.data_model_arr.dataset_names[self.active_index]        
-
         normVar = self.ui.comboBoxDivideByVar.currentText()
-        str_normVar = ','.join('"{0}"'.format(x) for x in [normVar])
-        
         selVars = self.ui.comboBoxSelVar.listCheckedItems()
-        str_selVars = ','.join('"{0}"'.format(x) for x in selVars)
-        
         outSuff = self.ui.edit_outSuff.text()
-        if outSuff[0] == '_':
+        if outSuff == '':
             outSuff = 'NORM'
         if outSuff[0] == '_':
             outSuff = outSuff[1:]
         outCat = outSuff
 
-        # Get active dset, apply normalization
-        dfCurr = self.data_model_arr.datasets[self.active_index].data
-        dfNorm, newVars = self.NormalizeData(dfCurr, selVars, normVar, outSuff)
+        ## Apply normalization
+        df = self.data_model_arr.datasets[self.active_index].data
+        dfNorm, outVarNames = self.NormalizeData(df, selVars, normVar, outSuff)
 
-        # Set updated dset
+        ## Set updated dset
         self.data_model_arr.datasets[self.active_index].data = dfNorm
         
         ## Create dict with info about new columns
-        self.AddNewVarsToDict(newVars, outCat = outCat)
+        outDesc = 'Created by NiChart NormalizeView Plugin'
+        outSource = 'NiChart NormalizeView Plugin'
+        self.data_model_arr.AddNewVarsToDict(outVarNames, outCat, outDesc, outSource)
             
         ## Call signal for change in data
         self.data_model_arr.OnDataChanged()
         
-        ## Load data to data view (reduce data size to make the app run faster)
-        ##   This view shows only the out variables
+        ## Load data to data view 
+        self.dataView = QtWidgets.QTableView()
+        
+        ## Reduce data size to make the app run faster
         tmpData = self.data_model_arr.datasets[self.active_index].data
-        tmpData = tmpData[newVars]
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
-        self.PopulateTable(tmpData)
 
+        ## Show only columns involved in application
+        tmpData = tmpData[outVarNames]
+        
+        self.PopulateTable(tmpData)
+                                                                                                                        
         ## Set data view to mdi widget
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
         self.mdi.addSubWindow(sub)        
         sub.show()
         self.mdi.tileSubWindows()
+        
+        ## Display status
+        self.statusbar.showMessage('Displaying normalized outcome variables')                
 
         ##-------
         ## Populate commands that will be written in a notebook
+        dset_name = self.data_model_arr.dataset_names[self.active_index]        
+
+        ## Add NormalizeData function definiton to notebook
+        fCode = inspect.getsource(self.NormalizeData).replace('(self, ','(')
+        self.cmds.add_funcdef('NormalizeData', ['', fCode, ''])
+        
+        ## Add cmds to call the function
         cmds = ['']
-        cmds.append('# Normalize dataset')
-        cmds.append('dfNorm = 100 * ' + dset_name + '[[' + str_selVars + ']].div(' + dset_name + '["' + normVar + '"], axis=0)')
-        cmds.append('outSuff = "' + outSuff + '"')
-        cmds.append('dfNorm = dfNorm.add_suffix("_" + outSuff)')
-        cmds.append(dset_name + ' = pd.concat([' + dset_name + ', dfNorm], axis=1)')
-        cmds.append(dset_name + '.head()')
-        cmds.append('')        
+        cmds.append('# Normalize data')
+
+        str_selVars = '[' + ','.join('"{0}"'.format(x) for x in selVars) + ']'
+        cmds.append('selVars = ' + str_selVars)
+
+        cmds.append('normVar = "' + normVar + '"')
+        
+        cmds.append('outSuff  = "' + outSuff + '"')
+        
+        cmds.append(dset_name + ', outVarNames = NormalizeData(' + dset_name + ', selVars, normVar, outSuff)')
+        
+        cmds.append(dset_name + '[outVarNames].head()')
+        cmds.append('')
         self.cmds.add_cmd(cmds)
         ##-------
    

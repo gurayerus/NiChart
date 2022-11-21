@@ -143,6 +143,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         str_mergeOn2 = ','.join('"{0}"'.format(x) for x in mergeOn2)
 
         cmds = ['']
+        cmds.append('# Normalize data')
         cmds.append(dset_name + ' = ' + dset_name + '.merge(' + dset_name2 + 
                     ', left_on = [' + str_mergeOn1 +'], right_on = [' + str_mergeOn2 + 
                     '], suffixes=["","_DUPLVARINDF2"])')

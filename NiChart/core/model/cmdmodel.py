@@ -55,9 +55,6 @@ class CmdModel(QObject):
         if fname not in self.funcnames:
             self.funcnames.append(fname)
             self.funcdef_cmds = self.funcdef_cmds + cvalue
-        else:
-            logger.critical('SKIIII1')
-            logger.critical(self.funcnames)
 
     def add_cmd(self, cvalue):
         self.cmds = self.cmds + cvalue
