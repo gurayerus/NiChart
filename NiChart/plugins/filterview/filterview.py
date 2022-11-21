@@ -192,7 +192,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = ' + dset_name + '.drop_duplicates(subset = [' + str_selVars + '])')
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def OnSelColBtnClicked(self): 
@@ -236,7 +236,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = ' + dset_name + '[[' + str_selVars + ']]')
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
 
@@ -359,7 +359,7 @@ class FilterView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = ' + dset_name + filterTxt)
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def OnFilterVarChanged(self):

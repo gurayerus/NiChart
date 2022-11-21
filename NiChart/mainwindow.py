@@ -234,7 +234,7 @@ class MainWindow(QtWidgets.QMainWindow):
             cmds = ['']
             cmds.append('# Load dataset')
             cmds.append(dset_name + ' = pd.read_csv("' + filename + '")')
-            self.cmds.add_cmds(cmds)
+            self.cmds.add_cmd(cmds)
         ##-------
         
     def LoadDictFile(self, filename):
@@ -308,7 +308,7 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
             cmds.append(dset + ' = ' + dset + '.rename(columns=dictTmp)')
             cmds.append('print("Dictionary applied to dataset : ' + dset + '")')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def OnLoadDsetClicked(self):
@@ -362,7 +362,7 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
         if filename[-6:] != '.ipynb':
             filename = filename + '.ipynb'
 
-        self.cmds.add_cmd('')          # Add a single empty line to indicate end of block
+        self.cmds.add_cmd([''])          # Add a single empty line to indicate end of block
         
         logger.info('--------------------------------------------')
         logger.info(self.cmds.cmds)
@@ -393,7 +393,7 @@ dfTmp[dfTmp.columns[dfTmp.columns.str.contains("VarCat")]].values.tolist()]')
         cmds.append('Saving data file')        
         cmds.append('pd.to_csv( "' + dset_name + '", index=False)')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def OnAboutClicked(self):

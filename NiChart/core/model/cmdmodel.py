@@ -24,63 +24,39 @@ class CmdModel(QObject):
 
         QObject.__init__(self)
         """The constructor."""
-        self.cmds = []
-        self.add_hdr_cmds()
+        
+        self.hdr_cmds = ['## NiChart Notebook']
+        self.hdr_cmds.append('#### Generated automatically by NiChart')
+        self.add_hdr()
+        
+        self.funcdef_cmds = ['#### Function definitions']
+        
+        self.cmds = ['#### Main notebook']
 
-    def add_hdr_cmds(self):
-        
+
+    def add_hdr(self):
         currTime = time.strftime('%l:%M%p %Z on %b %d, %Y')
-        
-        self.cmds.append('## NiChart Notebook')
-        self.cmds.append('#### Generated automatically by NiChart')
-        self.cmds.append('#### Generated automatically by NiChart')        
-        self.cmds.append('     ' + currTime)
-        self.cmds.append('#### Import statements')
-        self.cmds.append('')
-        self.cmds.append('import pandas as pd')
-        self.cmds.append('import numpy as np')
-        self.cmds.append('import seaborn as sns')
-        self.cmds.append('import matplotlib.pyplot as plt')
-        self.cmds.append('from matplotlib.cm import get_cmap')
-        self.cmds.append('from matplotlib.lines import Line2D')
-        self.cmds.append('')
-        self.cmds.append('#### Function definitions')
-        self.cmds.append('')
-        self.cmds.append('def hue_regplot(data, x, y, hue, palette=None, **kwargs):')
-        self.cmds.append('    regplots = []')
-        self.cmds.append('    levels = data[hue].unique()')
-        self.cmds.append('    if palette is None:')
-        self.cmds.append('        default_colors = get_cmap("tab10")')
-        self.cmds.append('        palette = {k: default_colors(i) for i, k in enumerate(levels)}')
-        self.cmds.append('    legendhandls=[]')
-        self.cmds.append('    for key in levels:')
-        self.cmds.append('        regplots.append(sns.regplot(x=x, y=y, data=data[data[hue] == key], color=palette[key], **kwargs))')
-        self.cmds.append('        legendhandls.append(Line2D([], [], color=palette[key], label=key))')
-        self.cmds.append('    return (regplots, legendhandls)')
-        self.cmds.append('')
-        self.cmds.append('#### Main notebook')
-        self.cmds.append('')
-        
+        self.hdr_cmds.append('     ' + currTime)
+        self.hdr_cmds.append('#### Import statements')
+        self.hdr_cmds.append('')
+        self.hdr_cmds.append('import pandas as pd')
+        self.hdr_cmds.append('import numpy as np')
+        self.hdr_cmds.append('import seaborn as sns')
+        self.hdr_cmds.append('import matplotlib.pyplot as plt')
+        self.hdr_cmds.append('from matplotlib.cm import get_cmap')
+        self.hdr_cmds.append('from matplotlib.lines import Line2D')
+        self.hdr_cmds.append('import statsmodels.formula.api as sm')
+        self.hdr_cmds.append('')
+    
+    def add_funcdef(self, cvalue):
+        self.funcdef_cmds = self.funcdef_cmds + cvalue
 
     def add_cmd(self, cvalue):
-        self.cmds.append(cvalue)
-        logger.info('Command added to command array')        
-        
-    def add_cmds(self, cvalue):
         self.cmds = self.cmds + cvalue
-        logger.info('Commands added to command array')        
 
     def print_cmds(self):
-        for i, tmpcmd in enumerate(self.cmds):
-            print('Cmd ' + str(i) + ' : ' + self.cmds[i])
-
-    ### Function to write commands as a regular file (FIXME: this is tmp for now)
-    #def cmds_to_file(self, fname):
-        #with open(fname, mode='w') as fout:
-            #logger.info('Writing file ' + fname)
-            #fout.write('Commands:')
-            #fout.write('\n'.join(self.cmds))
-            #logger.info(self.cmds)        
+        for i, tmpcmd in enumerate(self.hdr_cmds + self.funcdef_cmds + self.cmds):
+            print('Cmd ' + str(i) + ' : ' + tmpcmd)
         
     ## Function to write commands as a notebook
     def cmds_to_notebook(self, fname):
@@ -127,10 +103,9 @@ class CmdModel(QObject):
         cells = []          # Cells of the notebook
         cell = []           # Contents of single cell
 
-
         # Read commands and store into cells
         cmd_type = 'end_block'        
-        for i, tmp_cmd in enumerate(self.cmds):
+        for i, tmp_cmd in enumerate(self.hdr_cmds + self.funcdef_cmds + self.cmds):
             
             ## Start of block
             if cmd_type == 'end_block':

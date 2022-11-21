@@ -247,7 +247,7 @@ class NormalizeView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = pd.concat([' + dset_name + ', dfNorm], axis=1)')
         cmds.append(dset_name + '.head()')
         cmds.append('')        
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
    
     

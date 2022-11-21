@@ -165,7 +165,7 @@ class DsetView(QtWidgets.QWidget,BasePlugin):
                              str_sortCols  + '], ascending = [' + str_sortOrders + '])')
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
 
     def PopulateTable(self, data):

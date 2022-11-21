@@ -153,7 +153,7 @@ class MergeView(QtWidgets.QWidget,BasePlugin):
         cmds.append(dset_name + ' = ' + dset_name + '[colsKeep]')
         cmds.append(dset_name + '.head()')
         cmds.append('')
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
         
 

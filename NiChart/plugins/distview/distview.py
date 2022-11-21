@@ -168,7 +168,7 @@ class DistView(QtWidgets.QWidget,BasePlugin):
         cmds.append('')
         cmds = cmds + plot_cmds
         cmds.append('')        
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
         
     def OnDataChanged(self):

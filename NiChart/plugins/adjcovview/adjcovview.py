@@ -17,6 +17,8 @@ import pandas as pd
 from matplotlib.cm import get_cmap
 from matplotlib.lines import Line2D
 import statsmodels.formula.api as sm
+from NiChart.core.model.datamodel import PandasModel
+
 import inspect
 
 logger = iStagingLogger.get_logger(__name__)
@@ -87,7 +89,6 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         self.ui.wOptions.setMaximumWidth(300)
         
 
-
     def SetupConnections(self):
         
         self.data_model_arr.active_dset_changed.connect(lambda: self.OnDataChanged())
@@ -145,12 +146,9 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     ## It runs independently for each outcome variable
     ## The estimation is done on the selected subset and then applied to all samples
     ## The user can indicate covariates that will be corrected and not
-    def AdjCov(self, df, outVars, covCorrVars, covKeepVars=None, selCol=None, selVals=None, outSuff='_COVADJ'):
-        
+    def AdjCov(self, df, outVars, covCorrVars, covKeepVars=[], selCol='', selVals=[], outSuff='_COVADJ'):       
         cmds = ['']
-        
         dfInit = df.copy()
-        
         ## Combine covariates (to keep + to correct)
         #if covKeepVars is None:
         if covKeepVars is []:
@@ -160,7 +158,6 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
             covList = covKeepVars + covCorrVars;
             isCorr = list(np.zeros(len(covKeepVars)).astype(int)) + list(np.ones(len(covCorrVars)).astype(int))
         str_covList = ' + '.join(covList)
-        
         ## Prep data
         TH_MAX_NUM_CAT = 10
         dfCovs = []
@@ -179,41 +176,32 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
                 dfCovs.append(df[tmpVar])
                 isCorrArr.append(isCorr[i])
         dfCovs = pd.concat(dfCovs, axis=1)
-
         ## Get cov names
         covVars = dfCovs.columns.tolist()
         str_covVars = ' + '.join(covVars)
-
         ## Get data with all vars
         df = pd.concat([df[outVars], dfCovs], axis=1)
-
         ## Select training dataset (regression parameters estimated from this set)
         if selVals == []:
             dfTrain = df
         else:
             dfTrain = df[df[selCol]==selVals]
-
         ## Fit and apply model for each outcome var
         for i, tmpOutVar in enumerate(outVars):
             ## Fit model
             str_model = tmpOutVar + '  ~ ' + str_covVars
-
-            logger.info(' Running model : ' + str_model)
-            logger.info(' ddddd : ' + df.columns)
-            logger.info(covVars)
-            logger.info(isCorrArr)
-
+            #logger.info(' Running model : ' + str_model)
+            #logger.info(' ddddd : ' + df.columns)
+            #logger.info(covVars)
+            #logger.info(isCorrArr)
             mod = sm.ols(str_model, data=dfTrain)
             res = mod.fit()
-
             ## Apply model
             corrVal = df[tmpOutVar]
-
             for j, tmpCovVar in enumerate(covVars):
                 if isCorrArr[j] == 1:
                     corrVal = corrVal - df[tmpCovVar]*res.params[tmpCovVar]
             dfInit[tmpOutVar + outSuff] = corrVal
-        
         return dfInit
 
     def OnAdjCovBtnClicked(self):
@@ -231,16 +219,21 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         selVals = self.ui.comboBoxSelVal.listCheckedItems()
         outSuff = self.ui.edit_outSuff.text()
         
-        logger.info(outVars)
+        if selVals == []:
+            selCol = ''
         
         ## Correct data    
-        dfcorr, cmdscorr = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
+        dfcorr = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
 
         ## Update data
-        self.data_model_arr.datasets[self.active_index].data = dcorr
+        self.data_model_arr.datasets[self.active_index].data = dfcorr
 
         self.dataView = QtWidgets.QTableView()
-        plot_cmds = self.PopulateTable()
+
+        ## Load data to data view (reduce data size to make the app run faster)
+        tmpData = self.data_model_arr.datasets[self.active_index].data
+        tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+        self.PopulateTable(tmpData)
         
         sub = QMdiSubWindow()
         sub.setWidget(self.dataView)
@@ -249,15 +242,47 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         sub.show()
         self.mdi.tileSubWindows()
 
-        #fCode = inspect.getsource(AdjCov)
-        #logger.info('***************************************')
-        #logger.info(fCode)
+        ##-------
+        ## Populate commands that will be written in a notebook
+        dset_name = self.data_model_arr.dataset_names[self.active_index]        
+        cmds = ['']
+        cmds.append('# Adj covariates')
+        cmds.append('')
+        fCode = inspect.getsource(self.AdjCov)
+        cmds.append(fCode)
+        cmds.append('')
 
-        #self.cmds.add_cmd('')
-        #self.cmds.add_cmds(plot_cmds)
-        #self.cmds.add_cmd('')
+        str_outVars = '[' + ','.join('"{0}"'.format(x) for x in outVars) + ']'
+        cmds.append('outVars = ' + str_outVars)
 
+        str_covCorrVars = '[' + ','.join('"{0}"'.format(x) for x in covCorrVars) + ']'
+        cmds.append('covCorrVars = ' + str_covCorrVars)
 
+        str_covKeepVars = '[' + ','.join('"{0}"'.format(x) for x in covKeepVars) + ']'
+        cmds.append('covKeepVars = ' + str_covKeepVars)
+
+        cmds.append('selCol  = "' + selCol + '"')
+
+        str_selVals = '[' + ','.join('"{0}"'.format(x) for x in selVals) + ']'
+        cmds.append('selVals = ' + str_selVals)
+        
+        cmds.append('outSuff  = "' + outSuff + '"')
+        
+        cmds.append(dset_name + ' = AdjCov(' + dset_name + ', outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)')
+        cmds.append(dset_name + '.head()')
+        cmds.append('')
+        self.cmds.add_cmds(cmds)
+        ##-------
+
+    def PopulateTable(self, data):
+
+        ### FIXME : Data is truncated to single precision for the display
+        ### Add an option in settings to let the user change this
+        data = data.round(1)
+
+        model = PandasModel(data)
+        self.dataView = QtWidgets.QTableView()
+        self.dataView.setModel(model)
 
     def PopulateSelect(self):
 

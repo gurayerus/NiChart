@@ -108,6 +108,18 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
         self.ui.plotBtn.clicked.connect(lambda: self.OnPlotBtnClicked())
 
+    def hue_regplot(self, data, x, y, hue, palette=None, **kwargs):
+        regplots = []
+        levels = data[hue].unique()
+        if palette is None:
+            default_colors = get_cmap('tab10')
+            palette = {k: default_colors(i) for i, k in enumerate(levels)}
+        legendhandls=[]
+        for key in levels:
+            regplots.append(sns.regplot(x=x, y=y, data=data[data[hue] == key], color=palette[key], **kwargs))
+            legendhandls.append(Line2D([], [], color=palette[key], label=key))
+        return (regplots, legendhandls)
+
     def OnXCatChanged(self):
         selCat = self.ui.comboXCat.currentText()
         tmpData = self.data_model_arr.datasets[self.active_index]
@@ -162,7 +174,94 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             print('Too many unique values for selection, skip : ' + str(len(selHueVals)))
 
 
+
+    def PlotData(self, df, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
+
+        ## Get data
+        colSel = [xVar, yVar]
+        if len(filterVals)>0:
+            colSel.append([filterVar])
+        if len(hueVals)>0:
+            colSel.append([hueVar])
+        ## Remove duplicates in selected vars
+        colSel = [*set(colSel)]
+        dtmp = df[colSel]
+        
+        ## Filter data
+        if len(filterVals)>0:
+            dtmp = dtmp[dtmp[filterVar].isin(filterVals)]
+
+        ## Get hue values
+        if len(hueVals)>0:
+            dtmp = dtmp[dtmp[hueVar].isin(hueVals)]
+
+        # seaborn plot on axis
+        #a = sns.scatterplot(x=xVar, y=yVar, hue=hueVar, ax=self.plotCanvas.axes, s=5, data=dtmp)
+        
+        if len(hueVals)>0:
+            a,b = self.hue_regplot(dtmp, xVar, yVar, hueVar, ax=self.plotCanvas.axes)
+            self.plotCanvas.axes.legend(handles=b)
+            
+        else:
+            sns.regplot(data = dtmp, x = xVar, y = yVar, ax = self.plotCanvas.axes)
+            
+        self.plotCanvas.axes.yaxis.set_ticks_position('left')
+        self.plotCanvas.axes.xaxis.set_ticks_position('bottom')
+        sns.despine(fig=self.plotCanvas.axes.get_figure(), trim=True)
+        self.plotCanvas.axes.get_figure().set_tight_layout(True)
+        self.plotCanvas.axes.set(xlabel=xVar)
+        self.plotCanvas.axes.set(ylabel=yVar)
+
+        # refresh canvas
+        self.plotCanvas.draw()
+
     def OnPlotBtnClicked(self):
+
+        dset_name = self.data_model_arr.dataset_names[self.active_index]        
+
+        ## Read data
+        df = self.data_model_arr.datasets[self.active_index].data
+        
+        ## Read user selections for the plot
+        xVar = self.ui.comboXVar.currentText()
+        yVar = self.ui.comboYVar.currentText()
+        hueVar = self.ui.comboHueVar.currentText()
+        hueVals = self.ui.comboHueVal.listCheckedItems()
+        filterVar = self.ui.comboFilterVar.currentText()
+        filterVals = self.ui.comboFilterVal.listCheckedItems()
+        if filterVals == []:
+            filterVar = ''
+        if hueVals == []:
+            hueVar = ''
+        
+        ## Plot data    
+
+        self.plotCanvas = PlotCanvas(self.ui)
+        self.plotCanvas.axes = self.plotCanvas.fig.add_subplot(111)
+
+        sub = QMdiSubWindow()
+        sub.setWidget(self.plotCanvas)
+        self.mdi.addSubWindow(sub)        
+        
+        self.PlotData(df, xVar, yVar, filterVar, filterVals, hueVar, hueVals)
+        sub.show()
+        self.mdi.tileSubWindows()
+        
+        ###-------
+        ### Populate commands that will be written in a notebook
+        #cmds = ['']
+        #cmds.append('')
+        #cmds = cmds + plot_cmds
+        #cmds.append('')        
+        #self.cmds.add_cmd(cmds)
+        ###-------
+
+
+
+
+
+
+    def OnPlotBtnClicked2(self):
         
         xVar = self.ui.comboXVar.currentText()
         yVar = self.ui.comboYVar.currentText()
@@ -180,7 +279,7 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         sub.setWidget(self.plotCanvas)
         self.mdi.addSubWindow(sub)        
         
-        plot_cmds = self.PlotData(xVar, yVar, filterVar, filterVals, hueVar, hueVals)
+        plot_cmds = self.PlotData2(xVar, yVar, filterVar, filterVals, hueVar, hueVals)
         sub.show()
         self.mdi.tileSubWindows()
         
@@ -190,7 +289,7 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         cmds.append('')
         cmds = cmds + plot_cmds
         cmds.append('')        
-        self.cmds.add_cmds(cmds)
+        self.cmds.add_cmd(cmds)
         ##-------
         
     def OnDataChanged(self):
@@ -255,23 +354,9 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
             cbox.setCurrentText(strPlaceholder)
         cbox.blockSignals(False)
         
-    def hue_regplot(self, data, x, y, hue, palette=None, **kwargs):
         
-        regplots = []
-        levels = data[hue].unique()
-
-        if palette is None:
-            default_colors = get_cmap('tab10')
-            palette = {k: default_colors(i) for i, k in enumerate(levels)}
-
-        legendhandls=[]
-        for key in levels:
-            regplots.append(sns.regplot(x=x, y=y, data=data[data[hue] == key], color=palette[key], **kwargs))
-            legendhandls.append(Line2D([], [], color=palette[key], label=key))
-
-        return (regplots, legendhandls)
-        
-    def PlotData(self, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
+                
+    def PlotData2(self, xVar, yVar, filterVar, filterVals, hueVar, hueVals):
 
         # We keep an array of commands for saving them in a notebook
         plot_cmds = []
@@ -338,5 +423,4 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
 
         # Return commands for writing the notebook
         return plot_cmds
-        
 
