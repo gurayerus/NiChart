@@ -186,14 +186,8 @@ class PlotView(QtWidgets.QWidget,BasePlugin):
         if hueVar != '':
             colSel.append(hueVar)
         ## Remove duplicates in selected vars
-
-        logger.critical('EEEEEEEEEEEEEEEEEEEEEEEEe')
-        logger.critical(colSel)   
-
         colSel = [*set(colSel)]
         
-        logger.critical('EEEEEEEEEEEEEEEEEEEEEEEEe')
-        logger.critical(colSel)   
         dtmp = df[colSel]
         
         ## Filter data
