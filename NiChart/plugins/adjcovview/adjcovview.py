@@ -30,8 +30,10 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
 
         self.data_model_arr = None
         self.active_index = -1
-
+        
         self.cmds = None
+
+        self.TH_NUM_UNIQ = 20
 
         root = os.path.dirname(__file__)
 
@@ -148,9 +150,12 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     ## The user can indicate covariates that will be corrected and not
     def AdjCov(self, df, outVars, covCorrVars, covKeepVars=[], selCol='', selVals=[], outSuff='_COVADJ'):       
         cmds = ['']
-        dfInit = df.copy()
-        ## Combine covariates (to keep + to correct)
-        #if covKeepVars is None:
+        
+        # Make a copy of the init df
+        # It will be modified to handle categorical vars
+        dfOut = df.copy()
+        
+        # Combine covariates (to keep + to correct)
         if covKeepVars is []:
             covList = covCorrVars;
             isCorr = list(np.ones(len(covCorrVars)).astype(int))
@@ -158,8 +163,9 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
             covList = covKeepVars + covCorrVars;
             isCorr = list(np.zeros(len(covKeepVars)).astype(int)) + list(np.ones(len(covCorrVars)).astype(int))
         str_covList = ' + '.join(covList)
-        ## Prep data
-        TH_MAX_NUM_CAT = 10
+        
+        # Prep data
+        TH_MAX_NUM_CAT = 20     ## FIXME: This should be a global var
         dfCovs = []
         isCorrArr = []
         for i, tmpVar in enumerate(covList):
@@ -176,63 +182,65 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
                 dfCovs.append(df[tmpVar])
                 isCorrArr.append(isCorr[i])
         dfCovs = pd.concat(dfCovs, axis=1)
+        
         ## Get cov names
         covVars = dfCovs.columns.tolist()
         str_covVars = ' + '.join(covVars)
+        
         ## Get data with all vars
         df = pd.concat([df[outVars], dfCovs], axis=1)
+        
         ## Select training dataset (regression parameters estimated from this set)
         if selVals == []:
             dfTrain = df
         else:
             dfTrain = df[df[selCol]==selVals]
+            
         ## Fit and apply model for each outcome var
+        outVarNames = []
         for i, tmpOutVar in enumerate(outVars):
             ## Fit model
             str_model = tmpOutVar + '  ~ ' + str_covVars
-            #logger.info(' Running model : ' + str_model)
-            #logger.info(' ddddd : ' + df.columns)
-            #logger.info(covVars)
-            #logger.info(isCorrArr)
             mod = sm.ols(str_model, data=dfTrain)
             res = mod.fit()
             ## Apply model
             corrVal = df[tmpOutVar]
             for j, tmpCovVar in enumerate(covVars):
                 if isCorrArr[j] == 1:
-                    corrVal = corrVal - df[tmpCovVar]*res.params[tmpCovVar]
-            dfInit[tmpOutVar + outSuff] = corrVal
-        return dfInit
+                    corrVal = corrVal - df[tmpCovVar] * res.params[tmpCovVar]
+            dfOut[tmpOutVar + outSuff] = corrVal
+            outVarNames.append(tmpOutVar + outSuff)
+        return dfOut, outVarNames
 
     def OnAdjCovBtnClicked(self):
         
-        dset_name = self.data_model_arr.dataset_names[self.active_index]        
-
-        ## Read data
+        ## Read data and user selection
         df = self.data_model_arr.datasets[self.active_index].data
-        
-        ## Read user selections for correction
         outVars = self.ui.comboBoxOutVar.listCheckedItems()
         covKeepVars = self.ui.comboBoxCovKeepVar.listCheckedItems()
         covCorrVars = self.ui.comboBoxCovCorrVar.listCheckedItems()
         selCol = self.ui.comboBoxSelVar.currentText()
         selVals = self.ui.comboBoxSelVal.listCheckedItems()
         outSuff = self.ui.edit_outSuff.text()
-        
         if selVals == []:
             selCol = ''
         
         ## Correct data    
-        dfcorr = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
+        dfCorr, outVarNames = self.AdjCov(df, outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)
 
         ## Update data
-        self.data_model_arr.datasets[self.active_index].data = dfcorr
+        self.data_model_arr.datasets[self.active_index].data = dfCorr
 
+        ## Load data to data view 
         self.dataView = QtWidgets.QTableView()
-
-        ## Load data to data view (reduce data size to make the app run faster)
+        
+        ## Reduce data size to make the app run faster
         tmpData = self.data_model_arr.datasets[self.active_index].data
         tmpData = tmpData.head(self.data_model_arr.TABLE_MAXROWS)
+
+        ## Show only columns involved in application
+        tmpData = tmpData[outVarNames]
+        
         self.PopulateTable(tmpData)
         
         sub = QMdiSubWindow()
@@ -246,11 +254,11 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         ## Populate commands that will be written in a notebook
         dset_name = self.data_model_arr.dataset_names[self.active_index]        
 
-        ## Add code for function to adjust covars
-        fCode = inspect.getsource(self.AdjCov).replace('(self,','(')
+        ## Add cmds for the adjcov function
+        fCode = inspect.getsource(self.AdjCov).replace('(self, ','(')
         self.cmds.add_funcdef(['', fCode, ''])
 
-        ## Add code to call the function
+        ## Add cmds to call the function
         cmds = ['']
         cmds.append('# Adj covariates')
 
@@ -270,8 +278,9 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         
         cmds.append('outSuff  = "' + outSuff + '"')
         
-        cmds.append(dset_name + ' = AdjCov(' + dset_name + ', outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)')
-        cmds.append(dset_name + '.head()')
+        cmds.append(dset_name + ', outVarNames = AdjCov(' + dset_name + ', outVars, covCorrVars, covKeepVars, selCol, selVals, outSuff)')
+        
+        cmds.append(dset_name + '[outVarNames].head()')
         cmds.append('')
         self.cmds.add_cmd(cmds)
         ##-------
@@ -300,8 +309,6 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     def OnSelColChanged(self):
         
         ## Threshold to show categorical values for selection
-        TH_NUM_UNIQ = 20    
-        
         selcol = self.ui.comboBoxSelCol.currentText()
         dftmp = self.data_model_arr.datasets[self.active_index].data[selcol]
         val_uniq = dftmp.unique()
@@ -310,7 +317,7 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
         self.ui.comboBoxSelVals.show()
 
         ## Select values if #unique values for the field is less than set threshold
-        if num_uniq <= TH_NUM_UNIQ:
+        if num_uniq <= self.TH_NUM_UNIQ:
             #self.ui.wFilterNumerical.hide()
             #self.ui.wFilterCategorical.show()
             self.PopulateComboBox(self.ui.comboBoxSelVals, val_uniq)
@@ -335,12 +342,10 @@ class AdjCovView(QtWidgets.QWidget,BasePlugin):
     
     def OnSelIndexChanged(self):
         
-        TH_NUM_UNIQ = 20
-        
         selCol = self.ui.comboBoxSelVar.currentText()
         selColVals = self.data_model_arr.datasets[self.active_index].data[selCol].unique()
         
-        if len(selColVals) < TH_NUM_UNIQ:
+        if len(selColVals) < self.TH_NUM_UNIQ:
             self.ui.comboBoxSelVal.show()
             self.PopulateComboBox(self.ui.comboBoxSelVal, selColVals)
         else:
