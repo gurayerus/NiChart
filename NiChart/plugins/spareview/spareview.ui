@@ -168,7 +168,7 @@
                     </item>
                         
                     <item>
-                        <widget  class="QFrame"  name="wOutSuffix">
+                        <widget  class="QFrame"  name="wOutVarName">
                         <property  name="frameShape">
                             <enum>QFrame::StyledPanel</enum>
                         </property>
@@ -182,7 +182,7 @@
                             <item>
                             <widget  class="QLabel"  name="label_select2">
                                 <property  name="text">
-                                <string>Out suffix: </string>
+                                <string>Output Variable Name: </string>
                                 </property>
                             </widget>
                             </item>
@@ -207,7 +207,7 @@
                                 </spacer>
                                 </item>
                                 <item>
-                                    <widget  class="QLineEdit"  name="edit_outSuff">
+                                    <widget  class="QLineEdit"  name="edit_outVarName">
                                     </widget>
                                 </item>
                             </layout>
@@ -217,7 +217,7 @@
                     </item>
 
                     <item>
-                    <widget  class="QFrame"  name="wNormalize">
+                    <widget  class="QFrame"  name="wCalcSpare">
                         <property  name="frameShape">
                         <enum>QFrame::StyledPanel</enum>
                         </property>

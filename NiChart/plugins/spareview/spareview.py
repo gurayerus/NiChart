@@ -17,6 +17,10 @@ from NiChart.core.model.datamodel import PandasModel
 
 import inspect
 
+import sys
+sys.path.append('/cbica/home/erusg/3_DEV/SPARE-Scores/05_niCHART/packaging/spare_scores')
+import spare_scores as spare
+
 logger = iStagingLogger.get_logger(__name__)
 
 class SpareView(QtWidgets.QWidget,BasePlugin):
@@ -29,7 +33,13 @@ class SpareView(QtWidgets.QWidget,BasePlugin):
         
         self.cmds = None
         
-        self.model = None
+        self.modelname = None
+        self.modelname = '/home/guraylab/AIBIL/Github/TmpPackages/SpareScores/mdl/mdl_SPARE_AD_MUSE_single.pkl.gz'
+
+        ## Status bar of the main window
+        ## Initialized by the mainwindow during loading of plugin
+        self.statusbar = None
+
 
         ## Status bar of the main window
         ## Initialized by the mainwindow during loading of plugin
@@ -48,8 +58,9 @@ class SpareView(QtWidgets.QWidget,BasePlugin):
         
         self.ui.wOptions.setMaximumWidth(300)
         
-        filename = '/home/guray/Desktop/Spare/Mdl/mdl_SPARE_AD_MUSE_single.pkl.gz'
-        self.LoadModelFile(filename)
+        self.ui.wCalcSpare.hide()
+        
+        
 
     def SetupConnections(self):
         
@@ -59,14 +70,40 @@ class SpareView(QtWidgets.QWidget,BasePlugin):
         self.ui.calcSpareBtn.clicked.connect(self.OnCalcSpareBtnClicked)
 
 
-    def LoadModelFile(self, filename):
+    def CheckModel(self, filename):
         #read input data
         
         # Load model
         with gzip.open(filename, 'rb') as f:
             self.mdl = pickle.load(f)
-    
-        logger.critical(self.mdl.keys())
+            
+        # Get columns and check if they exist in dset
+        mdlCol = self.mdl['predictors']
+        dfCol = self.data_model_arr.datasets[self.active_index].data.columns
+
+        dfMdl = pd.DataFrame(columns=['Predictor'], data = mdlCol)
+        dfMdl['Status'] = dfMdl.Predictor.isin(dfCol)
+        dfMdl = dfMdl.replace({True:'FOUND', False:'MISSING'}).sort_values('Status', ascending = False)
+        
+        self.PopulateTable(dfMdl)
+
+        ## Set data view to mdi widget
+        sub = QMdiSubWindow()
+        sub.setWidget(self.dataView)
+        sub.setWindowTitle('MODEL: ' + os.path.basename(filename))
+        self.mdi.addSubWindow(sub)        
+        sub.show()
+        self.mdi.tileSubWindows()
+        
+        if dfMdl[dfMdl.Status=='MISSING'].shape[0] > 0:
+            self.statusbar.showMessage('WARNING: Model does not match the data!')
+        
+        else:
+            self.ui.wCalcSpare.show()
+            self.statusbar.showMessage('Model is valid')
+            
+        
+        logger.critical(dfMdl.head())
 
     def OnLoadModelBtnClicked(self):
 
@@ -75,6 +112,7 @@ class SpareView(QtWidgets.QWidget,BasePlugin):
         #else:
             #directory = self.dataPathLast
         directory = QtCore.QDir().homePath()
+        directory = '/home/guraylab/AIBIL/Github/TmpPackages/SpareScores/mdl'
 
         filename = QtWidgets.QFileDialog.getOpenFileName(None,
             caption = 'Open model file',
@@ -84,50 +122,59 @@ class SpareView(QtWidgets.QWidget,BasePlugin):
         if filename[0] == "":
             logger.warning("No file was selected")
         else:
-            self.LoadModelFile(filename[0])
-            
-        self.statusbar.showMessage('Loaded model')
-
-    
-    def spare_test(self, df, mdl):
-    
-        ## Output model description
-        #print('Trained on', mdl['n'], 'individuals')
-        #if mdl['spare_type']=='classification':
-            #print('Expected AUC =', np.round(np.mean(mdl['auc']),3))
-        #elif mdl['spare_type']=='regression':
-            #print('Expected MAE =', np.round(np.mean(mdl['mae']),3))
-            
-        # Convert categorical variables
-        if 'categorical_var_map' in mdl.keys():
-            for var in mdl['categorical_var_map'].keys():
-                if isinstance(mdl['categorical_var_map'][var], dict):
-                    df[var] = df[var].map(mdl['categorical_var_map'][var])
-
-        # Calculate SPARE scores
-        X = mdl['scaler'][0].transform(df[mdl['predictors']])
-        df_results = pd.DataFrame(data={'SPARE_scores':np.sum(X * mdl['mdl'][0].coef_, axis=1) + mdl['mdl'][0].intercept_})
-
-        return df_results
-
+            self.modelname = filename[0]
+            self.CheckModel(self.modelname)
 
     def OnCalcSpareBtnClicked(self):
 
+        ## Read data and spare options
         df = self.data_model_arr.datasets[self.active_index].data
+        outVarName = self.ui.edit_outVarName.text()
+        if outVarName == '':
+            outVarName = 'SPARE'
+        if outVarName[0] == '_':
+            outVarName = outVarName[1:]
+        outCat = outVarName
         
-        logger.info('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCc')
-
-        dfOut = self.spare_test(df, self.mdl)
+        ## Apply SPARE
+        dfOut = spare.spare_test(df, self.modelname)
+        dfOut.columns = [outVarName]
         
+        ## Set updated dset
+        df = pd.concat([df, dfOut], axis=1)
+        self.data_model_arr.datasets[self.active_index].data = df
+        
+        ## Create dict with info about new columns
+        outDesc = 'Created by NiChart SPARE Plugin'
+        outSource = 'NiChart SPARE Plugin'
+        self.data_model_arr.AddNewVarsToDict([outVarName], outCat, outDesc, outSource)
+            
+        ## Call signal for change in data
+        self.data_model_arr.OnDataChanged()
+        
+        ## Load data to data view 
+        self.dataView = QtWidgets.QTableView()
+        
+        ## Show only columns involved in application
+        
+        logger.info('CCCCCCCCCCCCCCCCCCCCCCCCCCCccc')
         logger.info(dfOut.shape)
+        logger.info(df.shape)
+        
+        dfOut = dfOut.round(3)
+        self.PopulateTable(dfOut)
+                                                                                                                        
+        ## Set data view to mdi widget
+        sub = QMdiSubWindow()
+        sub.setWidget(self.dataView)
+        sub.setWindowTitle('SPARE Scores')
+        self.mdi.addSubWindow(sub)        
+        sub.show()
+        self.mdi.tileSubWindows()
         
 
     def PopulateTable(self, data):
         
-        ### FIXME : Data is truncated to single precision for the display
-        ### Add an option in settings to let the user change this
-        data = data.round(1)
-
         model = PandasModel(data)
         self.dataView = QtWidgets.QTableView()
         self.dataView.setModel(model)
