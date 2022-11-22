@@ -1,0 +1,15 @@
+[Core]
+Name = Spare View
+Module = spareview
+
+[Documentation]
+Author = Guray Erus
+Version = 0.1
+Website = 
+Description = ---------- Description ----------
+    Plugin for calculating the SPARE scores
+    ---------- Options ----------
+
+[Tab]
+#tab position starts from 0
+Position = 8
