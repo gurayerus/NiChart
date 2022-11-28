@@ -41,6 +41,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         # Variable to keep path for the last data file loaded
         self.dataPathLast = ''
+        self.dataPathLast = '/home/guraylab/AIBIL/Github/TmpPackages/20221117_NiChart_TestData/TestSet_v1'      ## FIXME : Tmp
 
 
         # Create plugin manager
